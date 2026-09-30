@@ -45,3 +45,15 @@ img.hero-photo, img.priest-photo, .entry img { height: auto; }
   font-family: var(--font-heading); font-size: 18px; text-decoration: none;
 }
 .pagination .page-numbers.current { border-color: var(--color-accent); color: var(--color-accent-700); }
+
+/* Menu główne: bez podkreśleń, dolnych linii i tła — ani na hover, ani dla
+   bieżącej strony. Hover sygnalizuje wyłącznie subtelna zmiana koloru tekstu.
+   Przycisk „Transmisja” (.nav-live) bez zmian. */
+.mainnav .navlink,
+.mainnav .navlink:hover,
+.mainnav .navlink:focus,
+.mainnav .navlink:active,
+.mainnav .navlink[aria-current="page"] {
+  text-decoration: none; border-bottom: 0; box-shadow: none; background: none;
+}
+.mainnav .navlink:hover { color: var(--color-accent-700); }
