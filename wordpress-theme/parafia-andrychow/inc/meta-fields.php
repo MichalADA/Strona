@@ -22,7 +22,68 @@ add_action(
 		add_meta_box( 'parafia-ksiadz', __( 'Dane kontaktowe', 'parafia' ), 'parafia_ksiadz_box', 'ksiadz', 'normal', 'high' );
 		add_meta_box( 'parafia-intencje', __( 'Intencje w tym tygodniu', 'parafia' ), 'parafia_intencje_box', 'intencja', 'normal', 'high' );
 		add_meta_box( 'parafia-strona', __( 'Układ strony', 'parafia' ), 'parafia_strona_box', 'page', 'side', 'default' );
+		add_meta_box( 'parafia-glowna', __( 'Strona główna', 'parafia' ), 'parafia_glowna_box', 'aktualnosc', 'side', 'high' );
 	}
+);
+
+/* ------------------------------------------------------ Ogłoszenia: strona główna */
+
+/**
+ * Metabox ogłoszenia: „Pokaż na stronie głównej”.
+ *
+ * @param WP_Post $post Edytowane ogłoszenie.
+ */
+function parafia_glowna_box( $post ) {
+	wp_nonce_field( 'parafia_glowna', 'parafia_glowna_nonce' );
+	?>
+	<p><label style="font-size:14px"><input type="checkbox" name="parafia_na_glownej" value="1" <?php checked( get_post_meta( $post->ID, '_parafia_na_glownej', true ), '1' ); ?>>
+	<strong><?php esc_html_e( 'Pokaż na stronie głównej', 'parafia' ); ?></strong></label></p>
+	<p class="description"><?php esc_html_e( 'Strona główna pokazuje najwyżej 2 najnowsze zaznaczone ogłoszenia. Gdy żadne nie jest zaznaczone, sekcja ogłoszeń na stronie głównej się nie pojawia.', 'parafia' ); ?></p>
+	<?php
+}
+
+/**
+ * Wyróżnione ogłoszenia do strony głównej — najwyżej $limit najnowszych.
+ *
+ * @param int $limit Limit.
+ * @return WP_Post[]
+ */
+function parafia_featured_ogloszenia( $limit = 2 ) {
+	return get_posts(
+		array(
+			'post_type'      => 'aktualnosc',
+			'posts_per_page' => $limit,
+			'orderby'        => 'date',
+			'order'          => 'DESC',
+			'meta_key'       => '_parafia_na_glownej', // phpcs:ignore WordPress.DB.SlowDBQuery
+			'meta_value'     => '1',                   // phpcs:ignore WordPress.DB.SlowDBQuery
+		)
+	);
+}
+
+// Lista ogłoszeń w panelu: kolumna „Strona główna”, żeby od razu było widać, co jest wyróżnione.
+add_filter(
+	'manage_aktualnosc_posts_columns',
+	function ( $columns ) {
+		$out = array();
+		foreach ( $columns as $key => $label ) {
+			$out[ $key ] = $label;
+			if ( 'title' === $key ) {
+				$out['parafia_glowna'] = __( 'Strona główna', 'parafia' );
+			}
+		}
+		return $out;
+	}
+);
+add_action(
+	'manage_aktualnosc_posts_custom_column',
+	function ( $column, $post_id ) {
+		if ( 'parafia_glowna' === $column ) {
+			echo get_post_meta( $post_id, '_parafia_na_glownej', true ) ? '<strong>' . esc_html__( '✓ Tak', 'parafia' ) . '</strong>' : '<span aria-hidden="true">—</span>';
+		}
+	},
+	10,
+	2
 );
 
 /**
@@ -127,6 +188,14 @@ add_action(
 			update_post_meta( $post_id, '_parafia_email', sanitize_email( wp_unslash( $_POST['parafia_email'] ?? '' ) ) );
 			update_post_meta( $post_id, '_parafia_rodzic', ( 'rodak' === ( $_POST['parafia_rodzic'] ?? '' ) ) ? 'rodak' : '' );
 			update_post_meta( $post_id, '_parafia_rok_swiecen', absint( $_POST['parafia_rok_swiecen'] ?? 0 ) ?: '' );
+		}
+
+		if ( isset( $_POST['parafia_glowna_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['parafia_glowna_nonce'] ) ), 'parafia_glowna' ) ) {
+			if ( empty( $_POST['parafia_na_glownej'] ) ) {
+				delete_post_meta( $post_id, '_parafia_na_glownej' );
+			} else {
+				update_post_meta( $post_id, '_parafia_na_glownej', '1' );
+			}
 		}
 
 		if ( isset( $_POST['parafia_strona_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['parafia_strona_nonce'] ) ), 'parafia_strona' ) ) {

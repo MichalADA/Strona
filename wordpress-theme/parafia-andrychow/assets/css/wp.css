@@ -62,14 +62,9 @@ img.hero-photo, img.priest-photo, .entry img { height: auto; }
    Wartości bazowe = dotychczasowe style inline z prototypu (mobile bez zmian).
    Od 900 px (układ dwukolumnowy hero) ciaśniejszy, naturalny przepływ:
    hero → transmisja/kafle → ogłoszenia → stopka, bez pustych pasów. */
-.home-news { border-top: 1px solid var(--color-divider); margin-top: clamp(36px, 5vw, 56px); }
 .home-news-spacer { padding-bottom: clamp(36px, 5vw, 56px); }
 @media (min-width: 900px) {
   .hero-id { padding-block: 24px; }
-  .home-news { margin-top: 24px; padding-block: 28px 36px; }
-  .home-news .section-head { margin-bottom: 14px !important; }
-  .home-news article { padding-top: 14px !important; }
-  .home-news article + article { margin-top: 14px !important; }
   .home-news-spacer { padding-bottom: 24px; }
   /* Stopka na stronie głównej — ciaśniejszy pion, ten sam układ. */
   .home .footer > .wrap { padding-block: 36px !important; }
@@ -138,9 +133,6 @@ img.hero-photo, img.priest-photo, .entry img { height: auto; }
   .quick-label { font-size: 21px; }
   .quick-sub { font-size: 15px; }
 
-  /* Ogłoszenia niżej, bez nadmiarowych odstępów. */
-  .home-news { margin-top: 24px; padding-block: 26px 30px; }
-  .home-news .section-head { margin-bottom: 12px !important; }
   .home-news-spacer { padding-bottom: 24px; }
 
   /* Stopka pionowa, uproszczona. */
@@ -161,4 +153,31 @@ img.hero-photo, img.priest-photo, .entry img { height: auto; }
   .hero-times li { font-size: 28px; }
   .quick-live .live-label { font-size: 21px; }
   .quick-live .live-sub { font-size: 15px; }
+}
+
+/* Strona główna — wyróżnione ogłoszenia („Pokaż na stronie głównej”, maks. 2).
+   Spokojnie, bez kart: złota linia włosowa nad każdym ogłoszeniem, złoty
+   nadtytuł z datą, tytuł krojem nagłówkowym, krótki fragment, link. */
+.home-featured { padding-block: clamp(26px, 3.5vw, 36px) clamp(30px, 4vw, 44px); }
+.featured-list { display: grid; gap: 22px; }
+.featured-list--1 { max-width: 760px; }
+@media (min-width: 900px) {
+  .featured-list--2 { grid-template-columns: 1fr 1fr; gap: clamp(32px, 4vw, 56px); }
+}
+.featured-item { border-top: 1px solid var(--color-accent-2-400); padding-top: 14px; min-width: 0; }
+.featured-kicker { margin-bottom: 6px; }
+.featured-title { margin: 0 0 6px; font-size: clamp(22px, 2.2vw, 26px); line-height: 1.2; }
+.featured-title a { color: var(--color-text); text-decoration: none; }
+.featured-title a:hover { color: var(--color-accent-700); }
+.featured-excerpt {
+  margin: 0 0 8px; font-size: 17px; line-height: 1.55; color: var(--color-neutral-800);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.featured-more { display: inline-block; font-size: 17px; padding-block: 4px; }
+@media (max-width: 699px) {
+  .home-featured { padding-block: 22px 26px; }
+  .featured-list { gap: 18px; }
+  .featured-title { font-size: 22px; }
+  .featured-excerpt { font-size: 16.5px; }
+  .featured-more { padding-block: 10px; }
 }

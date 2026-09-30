@@ -71,7 +71,7 @@ Ofiara na kościół      /ofiara/
 Polityka prywatności   /polityka-prywatnosci/
 ```
 
-**Strona główna jest bramką, nie streszczeniem serwisu.** Kolejność: fotografia i tożsamość parafii → pięć głównych akcji (Msze, Intencje, Ogłoszenia, Kontakt + wyróżniona Transmisja na żywo) → krótka zajawka dwóch ostatnich ogłoszeń → stopka. I nic więcej.
+**Strona główna jest bramką, nie streszczeniem serwisu.** Kolejność: fotografia i tożsamość parafii → pięć głównych akcji (Msze, Intencje, Ogłoszenia, Kontakt + wyróżniona Transmisja na żywo) → (opcjonalnie) najwyżej dwa ogłoszenia oznaczone „Pokaż na stronie głównej” → stopka. I nic więcej. Bez oznaczonych ogłoszeń pod kaflami od razu jest stopka — to zamierzone.
 
 Porządek Mszy, duszpasterze, kancelaria i sakramenty **nie są** powielane na stronie głównej — mają własne strony, dostępne jednym kliknięciem z kafli lub z menu. Transmisja jest celowo największym elementem: to funkcja dla osób chorych, starszych i przebywających poza parafią.
 
@@ -254,6 +254,8 @@ Przy aktywacji (oraz jednorazowo po aktualizacji motywu, przy pierwszym wejściu
 ## 8. Instrukcja dla parafii (codzienna praca)
 
 **Dodać ogłoszenie:** Ogłoszenia → Dodaj nowe → tytuł → treść → (opcjonalnie zdjęcie wyróżniające) → Opublikuj. Data publikacji może być ustawiona z wyprzedzeniem („Zaplanuj”).
+
+**Pokazać ogłoszenie na stronie głównej:** w edycji ogłoszenia, w panelu bocznym „Strona główna”, zaznacz **Pokaż na stronie głównej** i zapisz. Strona główna pokazuje najwyżej 2 najnowsze zaznaczone ogłoszenia; gdy żadne nie jest zaznaczone, sekcji ogłoszeń na stronie głównej nie ma. Na liście ogłoszeń kolumna „Strona główna” pokazuje, które są zaznaczone. Żeby zdjąć ogłoszenie ze strony głównej — odznacz i zapisz. Krótki fragment pod tytułem pochodzi z pola „Zajawka” (albo z początku treści).
 
 **Dodać intencje na tydzień:** Intencje mszalne → Dodaj tydzień intencji → tytuł np. „31 sierpnia – 6 września 2026” → w tabeli wpisz dzień, godzinę i treść → Zapisz. Po zapisie pojawia się kolejny pusty wiersz. Wiersz z pustą treścią jest usuwany. Stare tygodnie zostają na liście jako archiwum.
 

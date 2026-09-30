@@ -107,51 +107,32 @@ $kicker   = implode( ' · ', array_filter( array( parafia_opt( 'miejscowosc' ), 
 </div>
 
 <?php
-$news = new WP_Query(
-	array(
-		'post_type'           => 'aktualnosc',
-		'posts_per_page'      => 2,
-		'ignore_sticky_posts' => true,
-		'no_found_rows'       => true,
-	)
-);
-if ( $news->have_posts() ) :
+// Ogłoszenia na stronie głównej: wyłącznie zaznaczone „Pokaż na stronie głównej”,
+// najwyżej 2 najnowsze. Bez zaznaczonych — sekcji nie ma, pod kaflami od razu stopka.
+$featured = parafia_featured_ogloszenia( 2 );
+if ( $featured ) :
 	?>
-	<section class="section wrap home-news" aria-labelledby="h-akt">
-		<div class="section-head" style="margin-bottom:var(--space-4)">
-			<div>
-				<p class="kicker" style="margin:0"><?php esc_html_e( 'Ogłoszenia', 'parafia' ); ?></p>
-				<h2 id="h-akt" style="margin:0"><?php esc_html_e( 'Ostatnie ogłoszenia', 'parafia' ); ?></h2>
-			</div>
-			<a href="<?php echo esc_url( parafia_archive_url( 'aktualnosc', 'aktualnosci' ) ); ?>"><?php esc_html_e( 'Wszystkie ogłoszenia →', 'parafia' ); ?></a>
+	<section class="wrap home-featured" aria-labelledby="h-wazne">
+		<h2 id="h-wazne" class="screen-reader-text"><?php esc_html_e( 'Ważne ogłoszenia', 'parafia' ); ?></h2>
+		<div class="featured-list featured-list--<?php echo count( $featured ); ?>">
+			<?php foreach ( $featured as $post ) : // phpcs:ignore WordPress.WP.GlobalVariablesOverride ?>
+				<?php setup_postdata( $post ); ?>
+				<article class="featured-item">
+					<p class="kicker featured-kicker"><?php esc_html_e( 'Ogłoszenie', 'parafia' ); ?> · <time datetime="<?php echo esc_attr( get_the_date( 'Y-m-d' ) ); ?>"><?php echo esc_html( parafia_post_date() ); ?></time></p>
+					<h3 class="featured-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+					<?php $excerpt = wp_trim_words( get_the_excerpt(), 24 ); ?>
+					<?php if ( $excerpt ) : ?>
+						<p class="featured-excerpt"><?php echo esc_html( $excerpt ); ?></p>
+					<?php endif; ?>
+					<a class="featured-more" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Czytaj więcej', 'parafia' ); ?><span class="screen-reader-text">: <?php the_title(); ?></span></a>
+				</article>
+			<?php endforeach; ?>
+			<?php wp_reset_postdata(); ?>
 		</div>
-		<?php
-		$first = true;
-		while ( $news->have_posts() ) :
-			$news->the_post();
-			if ( $first ) :
-				?>
-				<article style="border-top:1px solid var(--color-divider);padding-top:var(--space-4);max-width:760px">
-					<p class="card-meta" style="margin:0 0 6px"><time datetime="<?php echo esc_attr( get_the_date( 'Y-m-d' ) ); ?>"><?php echo esc_html( parafia_post_date() ); ?></time></p>
-					<h3 style="margin:0 0 10px;font-size:26px"><a href="<?php the_permalink(); ?>" style="color:inherit;text-decoration:none"><?php the_title(); ?></a></h3>
-					<p style="margin:0 0 10px"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 28 ) ); ?></p>
-					<a href="<?php the_permalink(); ?>"><?php esc_html_e( 'Czytaj więcej', 'parafia' ); ?><span class="screen-reader-text">: <?php the_title(); ?></span></a>
-				</article>
-			<?php else : ?>
-				<article style="border-top:1px solid var(--color-divider);padding-top:var(--space-4);margin-top:var(--space-4);max-width:760px">
-					<p class="card-meta" style="margin:0 0 6px"><time datetime="<?php echo esc_attr( get_the_date( 'Y-m-d' ) ); ?>"><?php echo esc_html( parafia_post_date() ); ?></time></p>
-					<h3 style="margin:0;font-size:22px"><a href="<?php the_permalink(); ?>" style="color:inherit;text-decoration:none"><?php the_title(); ?></a></h3>
-				</article>
-				<?php
-			endif;
-			$first = false;
-		endwhile;
-		wp_reset_postdata();
-		?>
 	</section>
 	<?php
 else :
-	// Bez ogłoszeń: zachowujemy odstęp między kaflami a stopką.
+	// Bez wyróżnionych ogłoszeń: tylko naturalny odstęp między kaflami a stopką.
 	echo '<div class="home-news-spacer"></div>';
 endif;
 
