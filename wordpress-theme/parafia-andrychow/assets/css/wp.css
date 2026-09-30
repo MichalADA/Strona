@@ -87,10 +87,11 @@ img.hero-photo, img.priest-photo, .entry img { height: auto; }
    „Pełny porządek Mszy” i cały przycisk transmisji.
    ================================================================== */
 
-/* Tablet i telefon: hero ułożone pionowo — zdjęcie w niższym kadrze,
-   żeby nie dominowało ekranu (krzyże na wieży pozostają w kadrze). */
+/* Tablet i telefon: całe zdjęcie kościoła, bez przycinania — naturalne
+   proporcje pliku, pełna szerokość kontenera, wysokość wynika z obrazu.
+   (Desktop ≥ 900 px bez zmian: kadr 4:3 z prototypu.) */
 @media (max-width: 899px) {
-  .hero-photo { aspect-ratio: 16 / 9; object-position: 50% 38%; }
+  .hero-photo { width: 100%; height: auto; aspect-ratio: auto; object-fit: contain; display: block; }
 }
 
 @media (max-width: 699px) {
