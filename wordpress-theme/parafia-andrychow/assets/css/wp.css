@@ -65,7 +65,13 @@ img.hero-photo, img.priest-photo, .entry img { height: auto; }
 .home-news { border-top: 1px solid var(--color-divider); margin-top: clamp(36px, 5vw, 56px); }
 .home-news-spacer { padding-bottom: clamp(36px, 5vw, 56px); }
 @media (min-width: 900px) {
-  .hero-id { padding-block: clamp(20px, 2.5vw, 36px) clamp(24px, 2.2vw, 32px); }
-  .home-news { margin-top: 32px; padding-block: 40px 48px; }
-  .home-news-spacer { padding-bottom: 32px; }
+  .hero-id { padding-block: 24px; }
+  .home-news { margin-top: 24px; padding-block: 28px 36px; }
+  .home-news .section-head { margin-bottom: 14px !important; }
+  .home-news article { padding-top: 14px !important; }
+  .home-news article + article { margin-top: 14px !important; }
+  .home-news-spacer { padding-bottom: 24px; }
+  /* Stopka na stronie głównej — ciaśniejszy pion, ten sam układ. */
+  .home .footer > .wrap { padding-block: 36px !important; }
+  .home .footer .rule { margin-block: 20px !important; }
 }
