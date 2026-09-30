@@ -75,3 +75,12 @@ img.hero-photo, img.priest-photo, .entry img { height: auto; }
   .home .footer > .wrap { padding-block: 36px !important; }
   .home .footer .rule { margin-block: 20px !important; }
 }
+
+/* Szerokość głównego kontenera (.wrap — header, treść i stopka razem).
+   Do 1600 px bez zmian (1180 px, jak w prototypie). Powyżej płynnie rośnie:
+   1600 → 1180 px, 1920 → 1320 px, 2560+ → 1440 px (maks.), zawsze wyśrodkowany
+   z szerokimi marginesami. Wersja mobilna nie jest dotknięta (minimum 1180 px
+   jest większe niż ekran telefonu/tabletu, więc działa tam dotychczasowe 100%). */
+:root {
+  --wrap: clamp(1180px, min(43.75vw + 480px, 18.75vw + 960px), 1440px);
+}
