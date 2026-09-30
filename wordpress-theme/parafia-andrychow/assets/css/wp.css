@@ -181,3 +181,15 @@ img.hero-photo, img.priest-photo, .entry img { height: auto; }
   .featured-excerpt { font-size: 16.5px; }
   .featured-more { padding-block: 10px; }
 }
+
+/* Stopka zawsze na dole ekranu przy krótkiej treści („sticky footer” bez
+   position: fixed/sticky). Wolne miejsce przejmuje <main>, nie stopka ani
+   sekcje treści. Przy dłuższej treści strona przewija się normalnie. */
+body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+body > main { flex: 1 0 auto; }
+/* Zalogowani: pasek administratora dodaje html { margin-top } — bez tej korekty
+   pojawiłoby się zbędne przewijanie o jego wysokość. */
+body.admin-bar { min-height: calc(100vh - 32px); min-height: calc(100dvh - 32px); }
+@media (max-width: 782px) {
+  body.admin-bar { min-height: calc(100vh - 46px); min-height: calc(100dvh - 46px); }
+}
