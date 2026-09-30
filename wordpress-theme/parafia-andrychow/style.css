@@ -1,0 +1,15 @@
+/*
+Theme Name: Parafia Andrychów
+Theme URI: https://example.org/parafia-andrychow
+Author: Demo — projekt nowej strony parafii
+Description: Lekki, klasyczny motyw dla parafii rzymskokatolickiej. Bez page-buildera, minimum JavaScriptu, pełne wsparcie Gutenberga. Wersja demonstracyjna.
+Version: 1.0.0
+Requires at least: 6.5
+Requires PHP: 8.1
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: parafia
+*/
+
+/* Warstwa wizualna motywu znajduje się w assets/css/theme.css.
+   Ten plik zawiera wyłącznie nagłówek motywu wymagany przez WordPressa. */

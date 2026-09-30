@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="robots" content="noindex, nofollow" />
+<title>Parafia św. Stanisława Biskupa i Męczennika w Andrychowie — wersja demonstracyjna</title>
+<meta name="description" content="Wersja demonstracyjna nowej strony parafii św. Stanisława Biskupa i Męczennika w Andrychowie." />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="parish-zielen.css" />
+<script src="_ds/classical-4c63b337-27ec-4d42-9eb3-de4f2359a1af/_ds_bundle.js"></script>
+</helmet>
+
+<a class="skip" href="#tresc">Przejdź do treści</a>
+
+<sc-if value="{{ showBar }}" hint-placeholder-val="{{ true }}">
+<div class="demobar" role="note"><strong>Wersja demonstracyjna</strong> — projekt nowej strony parafii. To nie jest oficjalny serwis parafialny.</div>
+</sc-if>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#/">
+      <img class="brand-mark" src="assets/sygnet.png" alt="" width="525" height="240" />
+      <span class="brand-text">
+        <span class="brand-name">Parafia św. Stanisława<span class="brand-long"><br />Biskupa i Męczennika</span></span>
+        <span class="brand-sub">Andrychów</span>
+      </span>
+    </a>
+
+    <nav class="mainnav" aria-label="Menu główne">
+      <ul>
+        <li><a class="navlink" href="#/aktualnosci">Ogłoszenia</a></li>
+        <li><a class="navlink" href="#/intencje">Intencje</a></li>
+        <li class="has-sub">
+          <a class="navlink" href="#/sakramenty/chrzest">Sakramenty
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+          </a>
+          <div class="submenu">
+            <a class="navlink" href="#/sakramenty/chrzest">Chrzest</a>
+            <a class="navlink" href="#/sakramenty/malzenstwo">Małżeństwo</a>
+            <a class="navlink" href="#/sakramenty/chorzy">Odwiedziny chorych</a>
+            <a class="navlink" href="#/sakramenty/pogrzeb">Pogrzeb</a>
+          </div>
+        </li>
+        <li class="has-sub">
+          <a class="navlink" href="#/parafia/o-parafii">Parafia
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+          </a>
+          <div class="submenu">
+            <a class="navlink" href="#/parafia/o-parafii">O parafii</a>
+            <a class="navlink" href="#/parafia/historia">Historia</a>
+            <a class="navlink" href="#/parafia/ksieza">Nasi księża</a>
+            <a class="navlink" href="#/parafia/grupy">Grupy parafialne</a>
+            <a class="navlink" href="#/parafia/galeria">Galeria</a>
+          </div>
+        </li>
+        <li><a class="navlink" href="#/kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+
+    <a class="nav-live" href="#/transmisja" aria-label="Transmisja na żywo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m16 13 5.2 3.1a1 1 0 0 0 1.5-.9V8.8a1 1 0 0 0-1.5-.9L16 11"></path><rect x="1.5" y="5.5" width="14.5" height="13" rx="2"></rect></svg>
+      <span class="label-text">Transmisja</span>
+    </a>
+
+    <button class="burger" type="button" onClick="{{ toggleMenu }}" aria-expanded="{{ menuOpen }}" aria-controls="menu-mobilne" aria-label="Otwórz menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+      <span class="label-text">Menu</span>
+    </button>
+  </div>
+
+  <sc-if value="{{ menuOpen }}">
+  <nav class="mobilenav" id="menu-mobilne" aria-label="Menu mobilne">
+    <ul>
+      <li><a href="#/" onClick="{{ closeMenu }}">Strona główna</a></li>
+      <li><a href="#/aktualnosci" onClick="{{ closeMenu }}">Ogłoszenia parafialne</a></li>
+      <li><a href="#/intencje" onClick="{{ closeMenu }}">Intencje mszalne</a></li>
+      <li><a href="#/msze" onClick="{{ closeMenu }}">Porządek Mszy Świętych</a></li>
+      <li><a href="#/transmisja" onClick="{{ closeMenu }}">Transmisja na żywo</a></li>
+      <li class="sub"><a href="#/sakramenty/chrzest" onClick="{{ closeMenu }}">Chrzest</a></li>
+      <li class="sub"><a href="#/sakramenty/malzenstwo" onClick="{{ closeMenu }}">Małżeństwo</a></li>
+      <li class="sub"><a href="#/sakramenty/chorzy" onClick="{{ closeMenu }}">Odwiedziny chorych</a></li>
+      <li class="sub"><a href="#/sakramenty/pogrzeb" onClick="{{ closeMenu }}">Pogrzeb</a></li>
+      <li class="sub"><a href="#/parafia/o-parafii" onClick="{{ closeMenu }}">O parafii</a></li>
+      <li class="sub"><a href="#/parafia/historia" onClick="{{ closeMenu }}">Historia</a></li>
+      <li class="sub"><a href="#/parafia/ksieza" onClick="{{ closeMenu }}">Nasi księża</a></li>
+      <li class="sub"><a href="#/parafia/grupy" onClick="{{ closeMenu }}">Grupy parafialne</a></li>
+      <li class="sub"><a href="#/parafia/galeria" onClick="{{ closeMenu }}">Galeria</a></li>
+      <li><a href="#/kontakt" onClick="{{ closeMenu }}">Kontakt</a></li>
+    </ul>
+  </nav>
+  </sc-if>
+</header>
+
+<main id="tresc">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <section class="hero-id" aria-labelledby="h-parafia">
+    <div class="wrap hero-grid">
+      <figure class="hero-fig">
+        <img class="hero-photo plate" src="assets/kosciol-dzien.jpg" alt="Kościół św. Stanisława Biskupa i Męczennika w Andrychowie od strony ulicy — wieża z krzyżami i zielone dachy" />
+      </figure>
+      <div class="hero-text">
+        <p class="kicker">Andrychów · ul. Starowiejska 30</p>
+        <h1 id="h-parafia" class="hero-title">Parafia św. Stanisława <span class="hero-title-sub">Biskupa i Męczennika</span></h1>
+        <p class="hero-diocese">Diecezja bielsko-żywiecka · dekanat andrychowski</p>
+        <div class="hero-today">
+          <p class="hero-today-label">Msze Święte dzisiaj</p>
+          <ul class="hero-times">
+            <sc-for list="{{ todayTimes }}" as="t" hint-placeholder-count="3">
+              <li>{{ t }}</li>
+            </sc-for>
+          </ul>
+          <a href="#/msze">Pełny porządek Mszy →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <a class="quick-live" href="#/transmisja">
+      <span class="live-icon" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="m16 13 5.2 3.1a1 1 0 0 0 1.5-.9V8.8a1 1 0 0 0-1.5-.9L16 11"></path><rect x="1.5" y="5.5" width="14.5" height="13" rx="2"></rect></svg>
+      </span>
+      <span class="live-text">
+        <span class="live-label">Transmisja na żywo</span>
+        <span class="live-sub">Oglądaj Mszę Świętą z naszego kościoła</span>
+      </span>
+      <svg class="live-arrow" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+    </a>
+    <nav class="quick" aria-label="Najważniejsze informacje">
+      <a href="#/msze">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+        <span class="quick-label">Msze</span>
+        <span class="quick-sub">Porządek i godziny</span>
+      </a>
+      <a href="#/intencje">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.6" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2"></rect><path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path></svg>
+        <span class="quick-label">Intencje</span>
+        <span class="quick-sub">Na bieżący tydzień</span>
+      </a>
+      <a href="#/aktualnosci">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.6" aria-hidden="true"><path d="M4 8h3l9-4.5v17L7 16H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"></path><path d="M19 9.5a4 4 0 0 1 0 5"></path></svg>
+        <span class="quick-label">Ogłoszenia</span>
+        <span class="quick-sub">Sprawy parafii</span>
+      </a>
+      <a href="#/kontakt">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.6" aria-hidden="true"><path d="M15.5 21a13 13 0 0 1-12.5-12.5 2 2 0 0 1 2-2.5h2.5a1 1 0 0 1 1 .9c.15 1.1.4 2.1.8 3a1 1 0 0 1-.3 1.2l-1.1.9a12 12 0 0 0 5 5l.9-1.1a1 1 0 0 1 1.2-.3c.9.4 1.9.65 3 .8a1 1 0 0 1 .9 1V19a2 2 0 0 1-2.4 2Z"></path></svg>
+        <span class="quick-label">Kontakt</span>
+        <span class="quick-sub">Kancelaria i adres</span>
+      </a>
+    </nav>
+  </div>
+
+  <section class="section wrap" aria-labelledby="h-akt" style="border-top:1px solid var(--color-divider);margin-top:clamp(36px,5vw,56px)">
+    <div class="section-head" style="margin-bottom:var(--space-4)">
+      <div>
+        <p class="kicker" style="margin:0">Ogłoszenia</p>
+        <h2 id="h-akt" style="margin:0">Ostatnie ogłoszenia</h2>
+      </div>
+      <a href="#/aktualnosci">Wszystkie ogłoszenia →</a>
+    </div>
+    <article style="border-top:1px solid var(--color-divider);padding-top:var(--space-4);max-width:760px">
+      <p class="card-meta" style="margin:0 0 6px"><time datetime="2026-08-30">30 sierpnia 2026</time> · treść demonstracyjna</p>
+      <h3 style="margin:0 0 10px;font-size:26px"><a href="#/aktualnosci/1" style="color:inherit;text-decoration:none">Przykładowy tytuł ogłoszenia parafialnego</a></h3>
+      <p style="margin:0 0 10px">Krótki zajawkowy fragment ogłoszenia parafialnego — treść demonstracyjna.</p>
+      <a href="#/aktualnosci/1">Czytaj więcej</a>
+    </article>
+    <article style="border-top:1px solid var(--color-divider);padding-top:var(--space-4);margin-top:var(--space-4);max-width:760px">
+      <p class="card-meta" style="margin:0 0 6px"><time datetime="2026-08-24">24 sierpnia 2026</time> · treść demonstracyjna</p>
+      <h3 style="margin:0;font-size:22px"><a href="#/aktualnosci/2" style="color:inherit;text-decoration:none">Drugi przykładowy wpis</a></h3>
+    </article>
+  </section>
+</sc-if>
+
+<sc-if value="{{ isNewsList }}">
+  <div class="wrap wrap-narrow section">
+    <p class="kicker">Ogłoszenia</p>
+    <h1>Ogłoszenia parafialne</h1>
+    <p class="demo-note">Treść demonstracyjna — wpisy poniżej są przykładowe.</p>
+    <div style="margin-top:var(--space-8);display:grid;gap:var(--space-6)">
+      <sc-for list="{{ news }}" as="n" hint-placeholder-count="4">
+        <article style="border-top:1px solid var(--color-divider);padding-top:var(--space-4)">
+          <p class="card-meta" style="margin:0 0 6px">{{ n.date }}</p>
+          <h2 style="margin:0 0 10px;font-size:26px"><a href="{{ n.href }}" style="color:inherit;text-decoration:none">{{ n.title }}</a></h2>
+          <p style="margin:0 0 10px">{{ n.excerpt }}</p>
+          <a href="{{ n.href }}">Czytaj więcej</a>
+        </article>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isNewsSingle }}">
+  <div class="wrap wrap-narrow section">
+    <p class="card-meta"><a href="#/aktualnosci">← Wszystkie ogłoszenia</a></p>
+    <p class="kicker">Treść demonstracyjna</p>
+    <h1>{{ newsItem.title }}</h1>
+    <p class="text-muted">{{ newsItem.date }}</p>
+    <div class="ph" style="aspect-ratio:16/9;margin-block:var(--space-6)">zdjęcie wpisu</div>
+    <p style="text-align:justify">{{ newsItem.excerpt }}</p>
+    <p class="demo-note">Treść demonstracyjna.</p>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isIntencje }}">
+  <div class="wrap section">
+    <p class="kicker">Intencje mszalne</p>
+    <h1>Intencje mszalne</h1>
+    <p class="text-muted" style="font-size:19px">Tydzień 31 sierpnia – 6 września 2026 · treść demonstracyjna</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-block:var(--space-6)">
+      <a class="btn btn-secondary" href="#/msze">Porządek Mszy Świętych</a>
+      <a class="btn btn-secondary" href="#/intencje">Archiwum intencji</a>
+    </div>
+    <div style="display:grid;gap:var(--space-6);max-width:900px">
+      <sc-for list="{{ intentions }}" as="d" hint-placeholder-count="3">
+        <section>
+          <h2 style="font-size:24px;margin:0 0 var(--space-2);padding-bottom:8px;border-bottom:1px solid var(--color-accent-300)">{{ d.day }}</h2>
+          <table class="sched">
+            <tbody>
+              <sc-for list="{{ d.items }}" as="i" hint-placeholder-count="3">
+                <tr><th scope="row" style="width:110px" class="tnum">{{ i.time }}</th><td>{{ i.text }}</td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </section>
+      </sc-for>
+    </div>
+    <p class="demo-note" style="margin-top:var(--space-8)">Treść demonstracyjna.</p>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isMsze }}">
+  <div class="wrap section">
+    <p class="kicker">Porządek nabożeństw</p>
+    <h1>Msze Święte</h1>
+
+    <section style="margin-top:var(--space-6)">
+      <h2 style="margin:0 0 var(--space-2)">{{ todayLabel }}</h2>
+      <p class="text-muted" style="margin:0 0 var(--space-4);font-size:17px">Wspomnienie dnia — treść demonstracyjna</p>
+      <ul class="today-times">
+        <sc-for list="{{ todayTimes }}" as="t" hint-placeholder-count="3">
+          <li>{{ t }}</li>
+        </sc-for>
+      </ul>
+      <p class="text-muted" style="margin-top:var(--space-4)">{{ todayNote }}</p>
+      <p style="margin-top:var(--space-4)"><a class="btn btn-primary" href="#/intencje">Intencje mszalne</a></p>
+    </section>
+
+    <section style="margin-top:var(--space-8);padding-top:var(--space-8);border-top:1px solid var(--color-divider)">
+      <h2>Stały porządek</h2>
+      <table class="sched" style="max-width:820px;margin-top:var(--space-4)">
+        <tbody>
+          <tr><th scope="row">Niedziele</th><td>6:30 · 8:30 · 10:00 · 11:30 · 13:00 · 18:00</td></tr>
+          <tr><th scope="row">Niedziele (lipiec i sierpień)</th><td>6:30 · 8:30 · 10:00 · 11:30 · 20:00</td></tr>
+          <tr><th scope="row">Święta zniesione</th><td>6:30 · 8:30 · 16:30 · 18:00</td></tr>
+          <tr><th scope="row">Dni powszednie</th><td>6:30 · 7:00 · 18:00</td></tr>
+          <tr><th scope="row">Adwent</th><td>6:30 · 18:00</td></tr>
+          <tr><th scope="row">Dni powszednie (lipiec i sierpień)</th><td>6:30 · 18:00</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isLive }}">
+  <div class="wrap" style="padding-top:var(--space-4);padding-bottom:var(--space-3)">
+    <h1 style="margin:0;font-size:clamp(26px,4vw,38px)">Transmisja na żywo</h1>
+    <p class="text-muted" style="margin:6px 0 0;font-size:17px">Transmisja Mszy Świętej z kościoła parafialnego.</p>
+  </div>
+  <div class="wrap" style="padding-bottom:var(--space-6)">
+    <div class="player">
+      <div style="text-align:center;color:#cfc8c2;padding:24px;max-width:560px">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" style="margin:0 auto 14px" aria-hidden="true"><circle cx="12" cy="12" r="10.5"></circle><path d="M10 8.5l6 3.5-6 3.5z"></path></svg>
+        <p style="margin:0;font-size:18px">{{ streamMessage }}</p>
+      </div>
+    </div>
+  </div>
+  <div style="padding-bottom:var(--space-8)"></div>
+</sc-if>
+
+<sc-if value="{{ isKontakt }}">
+  <div class="wrap section">
+    <p class="kicker">Kontakt</p>
+    <h1>Kontakt i kancelaria</h1>
+    <div class="split" style="margin-top:var(--space-8)">
+      <div>
+        <h2>Adres</h2>
+        <address style="font-style:normal;font-size:20px;line-height:1.8">
+          Parafia św. Stanisława Biskupa i Męczennika<br />
+          ul. Starowiejska 30<br />
+          34-120 Andrychów<br />
+          tel. <a href="tel:+48338753377">33 875 33 77</a>
+        </address>
+        <p class="text-muted">Adres e-mail parafii nie został podany do wersji demonstracyjnej.</p>
+        <h2 style="margin-top:var(--space-8)">Kancelaria parafialna</h2>
+        <table class="sched">
+          <tbody>
+            <tr><th scope="row">Poniedziałek – sobota</th><td>8:00 – 9:00</td></tr>
+            <tr><th scope="row">Wtorek, środa, czwartek</th><td>16:00 – 17:30</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:var(--space-4)">Kancelaria nieczynna w pierwszy czwartek miesiąca, w niedziele i święta przypadające w tygodniu oraz w dniu spowiedzi parafialnej.</p>
+      </div>
+      <div>
+        <h2>Jak dojechać</h2>
+        <sc-if value="{{ mapLoaded }}">
+          <div class="ph" style="aspect-ratio:4/3">tu ładuje się mapa OpenStreetMap<br />(ul. Starowiejska 30, Andrychów)</div>
+        </sc-if>
+        <sc-if value="{{ mapHidden }}" hint-placeholder-val="{{ true }}">
+          <div style="border:1px solid var(--color-divider);padding:var(--space-6);text-align:center">
+            <p style="font-size:17px">Mapa pochodzi z serwisu zewnętrznego. Kliknij, aby ją załadować — dopiero wtedy Twoje dane trafią do dostawcy mapy.</p>
+            <button class="btn btn-primary" type="button" onClick="{{ loadMap }}">Załaduj mapę</button>
+          </div>
+        </sc-if>
+        <p class="text-muted" style="margin-top:var(--space-4)">Kościół znajduje się przy ul. Starowiejskiej, w pobliżu centrum Andrychowa.</p>
+        <p class="demo-note">Formularz kontaktowy jest w wersji demonstracyjnej wyłączony — wiadomości nie są wysyłane ani zapisywane.</p>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isGaleria }}">
+  <div class="wrap section">
+    <p class="kicker">Galeria</p>
+    <h1>Galeria zdjęć</h1>
+    <p class="demo-note">Treść demonstracyjna — miejsca na zdjęcia.</p>
+    <h2 style="margin-top:var(--space-8)">Odpust parafialny · przykładowa galeria</h2>
+    <div class="gallery-grid">
+      <div class="ph">zdjęcie 1</div><div class="ph">zdjęcie 2</div><div class="ph">zdjęcie 3</div>
+      <div class="ph">zdjęcie 4</div><div class="ph">zdjęcie 5</div><div class="ph">zdjęcie 6</div>
+    </div>
+    <h2 style="margin-top:var(--space-8)">Remont kościoła · przykładowa galeria</h2>
+    <div class="gallery-grid">
+      <div class="ph">zdjęcie 1</div><div class="ph">zdjęcie 2</div><div class="ph">zdjęcie 3</div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isKsieza }}">
+  <div class="wrap section">
+    <p class="kicker">Nasi księża</p>
+    <h1>Nasi księża</h1>
+    <p class="demo-note">Dane demonstracyjne.</p>
+
+    <section style="margin-top:var(--space-8)">
+      <h2>Duszpasterze parafii</h2>
+      <div class="grid grid-4" style="margin-top:var(--space-6)">
+        <sc-for list="{{ priestsAll }}" as="p" hint-placeholder-count="4">
+          <article class="card">
+            <div class="ph priest-photo">portret</div>
+            <h3 class="card-title" style="margin:0">{{ p.name }}</h3>
+            <p class="card-meta" style="margin:0">{{ p.role }}</p>
+            <p class="card-body" style="margin:0">{{ p.contact }}</p>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="margin-top:var(--space-8);padding-top:var(--space-8);border-top:1px solid var(--color-divider)">
+      <h2>Kapłani pochodzący z naszej parafii</h2>
+      <p style="max-width:640px">Kapłani pochodzący z parafii św. Stanisława Biskupa i Męczennika w Andrychowie.</p>
+      <ul class="native-list">
+        <sc-for list="{{ nativePriests }}" as="n" hint-placeholder-count="5">
+          <li>
+            <span class="native-name">{{ n.name }}</span>
+            <span class="native-year">Święcenia kapłańskie: {{ n.year }}</span>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isArticle }}">
+  <div class="wrap wrap-narrow section">
+    <p class="kicker">{{ article.kicker }}</p>
+    <h1>{{ article.title }}</h1>
+    <p style="font-size:21px;line-height:1.6">{{ article.lead }}</p>
+    <sc-if value="{{ isOParafii }}" hint-placeholder-val="{{ false }}">
+      <figure style="margin:var(--space-6) 0 0">
+        <img class="plate" src="assets/kosciol-zachod.jpg" alt="Kościół św. Stanisława w Andrychowie z lotu ptaka o zachodzie słońca — wieża, trójkątny szczyt z witrażami i plac przed wejściem" loading="lazy" style="display:block;width:100%;height:auto;aspect-ratio:1600 / 1272" />
+      </figure>
+    </sc-if>
+    <p class="demo-note">Treść demonstracyjna. Rzeczywiste zasady i wymagania podaje parafia.</p>
+    <sc-for list="{{ article.sections }}" as="s" hint-placeholder-count="3">
+      <section style="margin-top:var(--space-8)">
+        <h2>{{ s.heading }}</h2>
+        <sc-for list="{{ s.paras }}" as="para" hint-placeholder-count="1">
+          <p style="text-align:justify">{{ para }}</p>
+        </sc-for>
+        <ul style="padding-left:22px">
+          <sc-for list="{{ s.items }}" as="it" hint-placeholder-count="3">
+            <li style="margin-bottom:8px">{{ it }}</li>
+          </sc-for>
+        </ul>
+      </section>
+    </sc-for>
+    <hr class="rule" style="margin-top:var(--space-8)" />
+    <p style="margin-top:var(--space-6)">Sprawy formalne załatwiamy w kancelarii parafialnej — <a href="#/kontakt">godziny otwarcia i kontakt</a>.</p>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isOfiara }}">
+  <div class="wrap wrap-narrow section">
+    <p class="kicker">Ofiara na kościół</p>
+    <h1>Wsparcie parafii</h1>
+    <p class="demo-note">Funkcja demonstracyjna. Płatności nie są obsługiwane, a formularz nie przyjmuje danych.</p>
+    <div class="card" style="margin-top:var(--space-8);gap:var(--space-4);opacity:0.75">
+      <h2 class="card-title" style="font-size:24px">Ofiara online — podgląd</h2>
+      <div class="seg" role="group" aria-label="Kwota (demonstracja)">
+        <label class="seg-opt"><input type="radio" name="kwota" disabled="disabled" />50 zł</label>
+        <label class="seg-opt"><input type="radio" name="kwota" disabled="disabled" />100 zł</label>
+        <label class="seg-opt"><input type="radio" name="kwota" disabled="disabled" />200 zł</label>
+      </div>
+      <button class="btn btn-primary" type="button" disabled="disabled">Przekaż ofiarę (nieaktywne)</button>
+    </div>
+    <h2 style="margin-top:var(--space-8)">Przelew tradycyjny</h2>
+    <p>Numer rachunku parafii nie został podany do wersji demonstracyjnej.</p>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isPrywatnosc }}">
+  <div class="wrap wrap-narrow section">
+    <p class="kicker">Informacje</p>
+    <h1>Polityka prywatności i pliki cookie</h1>
+    <p class="demo-note">Dokument demonstracyjny — wersja produkcyjna wymaga treści zatwierdzonej przez parafię i inspektora ochrony danych diecezji.</p>
+    <h2 style="margin-top:var(--space-8)">Zakres</h2>
+    <p style="text-align:justify">Serwis demonstracyjny nie zbiera danych osobowych, nie posiada formularzy przyjmujących zgłoszenia ani systemu płatności. Nie korzysta z narzędzi analitycznych ani reklamowych.</p>
+    <h2>Treści zewnętrzne</h2>
+    <p style="text-align:justify">Mapa oraz odtwarzacz transmisji pochodzą z serwisów zewnętrznych i są ładowane wyłącznie po świadomym kliknięciu użytkownika. Do tego momentu żadne zapytania do tych dostawców nie są wysyłane.</p>
+  </div>
+</sc-if>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap" style="padding-block:clamp(36px,5vw,56px)">
+    <div class="grid grid-3">
+      <div>
+        <h2 class="sr-only">Parafia św. Stanisława Biskupa i Męczennika</h2>
+        <img class="footer-logo" src="assets/logo-stopka.png" alt="Parafia św. Stanisława BM w Andrychowie" width="1200" height="477" loading="lazy" />
+        <p style="margin:0;line-height:1.65">ul. Starowiejska 30<br />34-120 Andrychów<br />tel. <a href="tel:+48338753377">33 875 33 77</a></p>
+      </div>
+      <nav aria-label="Stopka — parafia">
+        <ul style="list-style:none;margin:0;padding:0;line-height:2.4">
+          <li><a href="#/msze">Msze Święte</a></li>
+          <li><a href="#/intencje">Intencje mszalne</a></li>
+          <li><a href="#/aktualnosci">Ogłoszenia</a></li>
+          <li><a href="#/transmisja">Transmisja na żywo</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Stopka — informacje">
+        <ul style="list-style:none;margin:0;padding:0;line-height:2.4">
+          <li><a href="#/parafia/o-parafii">O parafii</a></li>
+          <li><a href="#/sakramenty/chrzest">Sakramenty</a></li>
+          <li><a href="#/kontakt">Kontakt</a></li>
+          <li><a href="#/prywatnosc">Polityka prywatności</a></li>
+        </ul>
+      </nav>
+    </div>
+    <hr class="rule" style="margin-block:var(--space-6)" />
+    <p style="margin:0;font-size:15px;color:#bdb6b0">Wersja demonstracyjna — projekt nowej strony parafii. Serwis nie jest oficjalną stroną parafii.</p>
+  </div>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showDemoBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;streamState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;offline&quot;,&quot;live&quot;],&quot;default&quot;:&quot;offline&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Transmisja&quot;}}">
+const DAYS = ['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
+const MONTHS = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
+
+const ARTICLES = {
+  'sakramenty/chrzest': {
+    kicker: 'Sakramenty', title: 'Chrzest',
+    lead: 'Chrzest zgłaszamy w kancelarii parafialnej — poniżej praktyczne informacje o dokumentach i przygotowaniu.',
+    sections: [
+      { heading: 'Wymagane dokumenty', paras: [], items: ['akt urodzenia dziecka z USC (do wglądu)', 'dane rodziców chrzestnych: imię, nazwisko, wiek, adres', 'zaświadczenie z parafii chrzestnych, że mogą pełnić tę funkcję'] },
+      { heading: 'Kiedy zgłosić', paras: ['Zgłoszenia przyjmujemy w godzinach pracy kancelarii, najlepiej na dwa tygodnie przed planowaną datą.'], items: [] },
+      { heading: 'Przygotowanie', paras: ['Przed chrztem odbywa się spotkanie dla rodziców i chrzestnych. Termin spotkania podawany jest przy zgłoszeniu.'], items: [] }
+    ]
+  },
+  'sakramenty/malzenstwo': {
+    kicker: 'Sakramenty', title: 'Małżeństwo',
+    lead: 'Formalności związane z zawarciem małżeństwa rozpoczynamy w kancelarii parafialnej z odpowiednim wyprzedzeniem.',
+    sections: [
+      { heading: 'Wymagane dokumenty', paras: [], items: ['aktualne świadectwa chrztu (wydane nie wcześniej niż 3 miesiące przed ślubem)', 'dowody osobiste', 'zaświadczenie o ukończeniu nauk przedmałżeńskich', 'zaświadczenie z USC (przy ślubie konkordatowym)'] },
+      { heading: 'Kiedy zgłosić', paras: ['Termin ślubu rezerwujemy z wyprzedzeniem; protokół przedmałżeński spisujemy zwykle na około trzy miesiące przed ceremonią.'], items: [] },
+      { heading: 'Przygotowanie', paras: ['Narzeczeni odbywają nauki przedmałżeńskie oraz spotkania w poradni rodzinnej. Terminy podaje kancelaria.'], items: [] }
+    ]
+  },
+  'sakramenty/chorzy': {
+    kicker: 'Sakramenty', title: 'Odwiedziny chorych',
+    lead: 'Kapłani odwiedzają chorych z posługą sakramentalną regularnie oraz na każde wezwanie.',
+    sections: [
+      { heading: 'Odwiedziny stałe', paras: ['Chorych zgłoszonych w kancelarii odwiedzamy w wyznaczone dni miesiąca.'], items: [] },
+      { heading: 'Wezwanie do chorego', paras: ['W nagłych przypadkach prosimy o telefon do kancelarii parafialnej — kapłan przyjeżdża o każdej porze.'], items: [] },
+      { heading: 'Przygotowanie mieszkania', paras: [], items: ['stół nakryty białym obrusem', 'krzyż i zapalona świeca', 'szklanka wody'] }
+    ]
+  },
+  'sakramenty/pogrzeb': {
+    kicker: 'Sakramenty', title: 'Pogrzeb',
+    lead: 'Pogrzeb zgłasza rodzina w kancelarii parafialnej; termin ustalamy wspólnie z zakładem pogrzebowym.',
+    sections: [
+      { heading: 'Wymagane dokumenty', paras: [], items: ['akt zgonu z USC', 'zaświadczenie o przyjęciu sakramentów (jeśli zgon nastąpił w szpitalu lub hospicjum)', 'zgoda parafii zamieszkania, jeśli zmarły należał do innej parafii'] },
+      { heading: 'Zgłoszenie', paras: ['Zgłoszenia przyjmujemy w kancelarii; w sprawach pilnych prosimy o kontakt telefoniczny.'], items: [] },
+      { heading: 'Modlitwa za zmarłych', paras: ['Rodzina może zamówić Mszę Świętą w intencji zmarłego — intencje przyjmuje kancelaria.'], items: [] }
+    ]
+  },
+  'parafia/o-parafii': {
+    kicker: 'Parafia', title: 'O parafii',
+    lead: 'Parafia św. Stanisława Biskupa i Męczennika w Andrychowie należy do diecezji bielsko-żywieckiej, dekanat andrychowski.',
+    sections: [
+      { heading: 'Kościół parafialny', paras: ['Kościół znajduje się przy ul. Starowiejskiej 30 w Andrychowie. Opis architektury i wyposażenia uzupełni parafia.'], items: [] },
+      { heading: 'Życie parafialne', paras: ['Msze Święte, nabożeństwa, grupy duszpasterskie i dzieła charytatywne — szczegóły w pozostałych działach serwisu.'], items: [] }
+    ]
+  },
+  'parafia/historia': {
+    kicker: 'Parafia', title: 'Historia parafii',
+    lead: 'Rys historyczny parafii zostanie uzupełniony treścią przekazaną przez parafię.',
+    sections: [
+      { heading: 'Kalendarium', paras: ['W tym miejscu prezentowane będzie kalendarium: erygowanie parafii, budowa i konsekracja kościoła, ważne wydarzenia i wizytacje.'], items: [] },
+      { heading: 'Materiały archiwalne', paras: ['Kroniki, fotografie i dokumenty można publikować jako galerie oraz pliki do pobrania.'], items: [] }
+    ]
+  },
+  'parafia/grupy': {
+    kicker: 'Parafia', title: 'Grupy parafialne',
+    lead: 'Wykaz wspólnot działających przy parafii — treść demonstracyjna, do uzupełnienia przez parafię.',
+    sections: [
+      { heading: 'Przykładowe wspólnoty', paras: [], items: ['Liturgiczna Służba Ołtarza', 'Schola i chór parafialny', 'Żywy Różaniec', 'Caritas parafialna', 'Grupa młodzieżowa'] },
+      { heading: 'Jak dołączyć', paras: ['Przy każdej wspólnocie można podać opiekuna, miejsce i godzinę spotkań oraz kontakt.'], items: [] }
+    ]
+  }
+};
+
+class Component extends DCLogic {
+  state = { route: 'home', menuOpen: false, mapLoaded: false };
+
+  componentDidMount() {
+    this.sync = () => {
+      const h = (location.hash || '').replace(/^#\/?/, '').replace(/\/$/, '');
+      this.setState({ route: h || 'home', menuOpen: false });
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener('hashchange', this.sync);
+    this.sync();
+  }
+  componentWillUnmount() { window.removeEventListener('hashchange', this.sync); }
+
+  today() {
+    const d = new Date();
+    const m = d.getMonth(), dow = d.getDay(), date = d.getDate();
+    const summer = m === 6 || m === 7;
+    const advent = m === 11 && date <= 24;
+    let times, note;
+    if (dow === 0) {
+      times = summer ? ['6:30','8:30','10:00','11:30','20:00'] : ['6:30','8:30','10:00','11:30','13:00','18:00'];
+      note = summer ? 'Porządek wakacyjny (lipiec i sierpień).' : 'Porządek niedzielny.';
+    } else if (summer) {
+      times = ['6:30','18:00']; note = 'Porządek wakacyjny (lipiec i sierpień).';
+    } else if (advent) {
+      times = ['6:30','18:00']; note = 'Porządek adwentowy. Roraty o 6:30.';
+    } else {
+      times = ['6:30','7:00','18:00']; note = 'Zwykły porządek dnia powszedniego. W święta zniesione: 6:30, 8:30, 16:30, 18:00.';
+    }
+    return { label: 'Dzisiaj – ' + DAYS[dow] + ', ' + date + ' ' + MONTHS[m], times, note };
+  }
+
+  renderVals() {
+    const r = this.state.route;
+    const t = this.today();
+    const priests = [
+      { name: 'Imię i nazwisko', role: 'Proboszcz', contact: 'Dane demonstracyjne' },
+      { name: 'Imię i nazwisko', role: 'Wikariusz', contact: 'Dane demonstracyjne' },
+      { name: 'Imię i nazwisko', role: 'Wikariusz', contact: 'Dane demonstracyjne' },
+      { name: 'Imię i nazwisko', role: 'Rezydent', contact: 'Dane demonstracyjne' }
+    ];
+    const news = [
+      { title: 'Przykładowy tytuł ogłoszenia parafialnego', date: '30 sierpnia 2026', href: '#/aktualnosci/1', excerpt: 'Krótki zajawkowy fragment ogłoszenia parafialnego — treść demonstracyjna.' },
+      { title: 'Drugi przykładowy wpis', date: '24 sierpnia 2026', href: '#/aktualnosci/2', excerpt: 'Treść demonstracyjna.' },
+      { title: 'Trzeci przykładowy wpis — bez zdjęcia', date: '16 sierpnia 2026', href: '#/aktualnosci/3', excerpt: 'Treść demonstracyjna.' },
+      { title: 'Czwarty przykładowy wpis', date: '2 sierpnia 2026', href: '#/aktualnosci/4', excerpt: 'Treść demonstracyjna.' }
+    ];
+    const isNewsSingle = /^aktualnosci\/\d+$/.test(r);
+    const idx = isNewsSingle ? Math.min(parseInt(r.split('/')[1], 10), news.length) - 1 : 0;
+    const article = ARTICLES[r];
+    const stream = this.props.streamState ?? 'offline';
+
+    return {
+      showBar: this.props.showDemoBar ?? true,
+      menuOpen: this.state.menuOpen,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      mapLoaded: this.state.mapLoaded,
+      mapHidden: !this.state.mapLoaded,
+      loadMap: () => this.setState({ mapLoaded: true }),
+
+      isHome: r === 'home',
+      isNewsList: r === 'aktualnosci',
+      isNewsSingle,
+      isIntencje: r === 'intencje',
+      isMsze: r === 'msze',
+      isLive: r === 'transmisja',
+      isKontakt: r === 'kontakt',
+      isGaleria: r === 'parafia/galeria',
+      isKsieza: r === 'parafia/ksieza',
+      isOfiara: r === 'ofiara',
+      isPrywatnosc: r === 'prywatnosc',
+      isArticle: !!article,
+      article: article || { kicker: '', title: '', lead: '', sections: [] },
+      isOParafii: r === 'parafia/o-parafii',
+
+      todayLabel: t.label, todayTimes: t.times, todayNote: t.note,
+      priests, priestsAll: priests.concat([
+        { name: 'Imię i nazwisko', role: 'Rezydent', contact: 'Dane demonstracyjne' },
+        { name: 'Imię i nazwisko', role: 'Wikariusz', contact: 'Dane demonstracyjne' }
+      ]),
+      // Lista chronologiczna wg roku święceń — nie ranking, więc bez numeracji.
+      nativePriests: [
+        { name: 'Imię i nazwisko', year: '1974' },
+        { name: 'Imię i nazwisko', year: '1981' },
+        { name: 'Imię i nazwisko', year: '1987' },
+        { name: 'Imię i nazwisko', year: '1996' },
+        { name: 'Imię i nazwisko', year: '2004' },
+        { name: 'Imię i nazwisko', year: '2015' }
+      ],
+      news, newsItem: news[idx] || news[0],
+      streamMessage: stream === 'live'
+        ? 'Odtwarzacz transmisji (podgląd demonstracyjny). Naciśnij, aby odtworzyć.'
+        : 'Transmisja jest obecnie niedostępna. Najbliższa transmitowana Msza Święta — w niedzielę o 10:00.',
+      intentions: [
+        { day: 'Poniedziałek, 31 sierpnia', items: [
+          { time: '6:30', text: 'Intencja demonstracyjna — treść przykładowa' },
+          { time: '7:00', text: 'Intencja demonstracyjna — treść przykładowa' },
+          { time: '18:00', text: 'Intencja demonstracyjna — treść przykładowa' } ] },
+        { day: 'Wtorek, 1 września', items: [
+          { time: '6:30', text: 'Intencja demonstracyjna — treść przykładowa' },
+          { time: '7:00', text: 'Intencja demonstracyjna — treść przykładowa' },
+          { time: '18:00', text: 'Intencja demonstracyjna — treść przykładowa' } ] },
+        { day: 'Niedziela, 6 września', items: [
+          { time: '6:30', text: 'Intencja demonstracyjna — treść przykładowa' },
+          { time: '8:30', text: 'Intencja demonstracyjna — treść przykładowa' },
+          { time: '10:00', text: 'Intencja demonstracyjna — treść przykładowa' },
+          { time: '11:30', text: 'Intencja demonstracyjna — treść przykładowa' },
+          { time: '13:00', text: 'Intencja demonstracyjna — treść przykładowa' },
+          { time: '18:00', text: 'Intencja demonstracyjna — treść przykładowa' } ] }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

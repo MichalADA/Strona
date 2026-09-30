@@ -1,0 +1,130 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": {
+      "contentSize": "760px",
+      "wideSize": "1180px"
+    },
+    "color": {
+      "custom": false,
+      "customGradient": false,
+      "defaultPalette": false,
+      "defaultGradients": false,
+      "palette": [
+        {
+          "slug": "tlo",
+          "color": "#f7f4ee",
+          "name": "Kość słoniowa"
+        },
+        {
+          "slug": "powierzchnia",
+          "color": "#efeae1",
+          "name": "Powierzchnia"
+        },
+        {
+          "slug": "tekst",
+          "color": "#20231f",
+          "name": "Tekst"
+        },
+        {
+          "slug": "akcent",
+          "color": "#294438",
+          "name": "Zieleń"
+        },
+        {
+          "slug": "akcent-jasny",
+          "color": "#3c5b4a",
+          "name": "Zieleń jaśniejsza"
+        },
+        {
+          "slug": "zloto",
+          "color": "#a98a55",
+          "name": "Złoto (detal)"
+        }
+      ]
+    },
+    "typography": {
+      "customFontSize": false,
+      "fluid": true,
+      "fontFamilies": [
+        {
+          "slug": "naglowki",
+          "name": "Cormorant Garamond",
+          "fontFamily": "\"Cormorant Garamond\", Georgia, serif"
+        },
+        {
+          "slug": "tekst",
+          "name": "Lora",
+          "fontFamily": "Lora, Georgia, serif"
+        }
+      ],
+      "fontSizes": [
+        {
+          "slug": "small",
+          "size": "16px",
+          "name": "Mały"
+        },
+        {
+          "slug": "medium",
+          "size": "18px",
+          "name": "Podstawowy"
+        },
+        {
+          "slug": "large",
+          "size": "21px",
+          "name": "Duży"
+        },
+        {
+          "slug": "x-large",
+          "size": "clamp(24px, 3.4vw, 34px)",
+          "name": "Nagłówek"
+        }
+      ]
+    },
+    "spacing": {
+      "units": [
+        "px",
+        "rem",
+        "%"
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var(--wp--preset--color--tlo)",
+      "text": "var(--wp--preset--color--tekst)"
+    },
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--tekst)",
+      "fontSize": "18px",
+      "lineHeight": "1.6"
+    },
+    "elements": {
+      "link": {
+        "color": {
+          "text": "var(--wp--preset--color--akcent)"
+        }
+      },
+      "h1": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--naglowki)",
+          "fontWeight": "400"
+        }
+      },
+      "h2": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--naglowki)",
+          "fontWeight": "600"
+        }
+      },
+      "h3": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--naglowki)",
+          "fontWeight": "600"
+        }
+      }
+    }
+  }
+}

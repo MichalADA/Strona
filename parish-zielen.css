@@ -1,0 +1,400 @@
+/* Parafia św. Stanisława — adaptation layer over the Classical design system.
+   Three documented departures from the stock system, all driven by the brief:
+   1. Palette retuned from the stock gold-on-grey to a sacred register: warm ivory
+      ground, deep forest green as the single interactive accent, antique gold
+      reserved for hairline details only. Same role structure, same ramp shape,
+      same OKLCH lightness steps — hue and ground move, nothing else.
+   2. Base type scaled up (15px -> 18px). Many parishioners are elderly;
+      readability outranks the stock density.
+   3. Footer sits on the deepest green step rather than neutral near-black, so it
+      reads as part of the same body of color.
+   Everything else (Cormorant Garamond / Lora, hairlines, .plate, outlined
+   buttons, focus ring) is the system as shipped. */
+
+:root {
+  /* ground */
+  --color-bg: #f7f4ee;
+  --color-surface: #efeae1;
+  --color-text: #20231f;
+  --color-divider: #d8d2c7;
+  --color-border: #d8d2c7;
+
+  /* WARIANT KOLORYSTYCZNY: zieleń. Jedyna różnica względem parish.css to
+     paleta w :root — układ, wymiary i typografia są identyczne.
+     primary accent — deep ecclesiastical green; white on 800 ≈ 12:1 */
+  --color-accent: #294438;
+  --color-accent-100: #eef2ef;
+  --color-accent-200: #dbe4de;
+  --color-accent-300: #bccabf;
+  --color-accent-400: #94aa9c;
+  --color-accent-500: #648376;
+  --color-accent-600: #3c5b4a;
+  --color-accent-700: #294438;
+  --color-accent-800: #1e3329;
+  --color-accent-900: #17251f;
+
+  /* antique gold — sampled from the logo artwork (#bc9c5c); hairlines and
+     small marks only, never a fill. 700 is the text-safe step on ivory. */
+  --color-accent-2: #a98a55;
+  --color-accent-2-100: #f6f1e6;
+  --color-accent-2-200: #ece2cd;
+  --color-accent-2-300: #ddcda9;
+  --color-accent-2-400: #c9b083;
+  --color-accent-2-500: #b89a6a;
+  --color-accent-2-600: #a98a55;
+  --color-accent-2-700: #8a6f42;
+  --color-accent-2-800: #6a5533;
+  --color-accent-2-900: #4a3b23;
+
+  /* warm neutrals to match the ivory ground */
+  --color-neutral-100: #f7f4ee;
+  --color-neutral-200: #efeae1;
+  --color-neutral-300: #e2dcd0;
+  --color-neutral-400: #cdc6b8;
+  --color-neutral-500: #a9a294;
+  --color-neutral-600: #837d71;
+  --color-neutral-700: #5f5a51;
+  --color-neutral-800: #3d3a34;
+  --color-neutral-900: #20231f;
+
+  --wrap: 1180px;
+  --wrap-narrow: 760px;
+}
+
+/* — accessible type scale — */
+body { font-size: 18px; line-height: 1.6; }
+h1 { font-size: clamp(28px, 4.6vw, 48px); font-weight: 400; }
+h2 { font-size: clamp(24px, 3.4vw, 34px); }
+h3 { font-size: clamp(20px, 2.4vw, 26px); }
+h4 { font-size: 20px; }
+p { margin: 0 0 var(--space-4); }
+.btn { font-size: 17px; padding: 12px 20px; min-height: 48px; }
+.card-title { font-size: 22px; }
+.card-body { font-size: 17px; opacity: 1; color: var(--color-neutral-800); }
+.card-meta { font-size: 14px; }
+.card-kicker { font-size: 12px; }
+.tag { font-size: 13px; padding: 4px 12px; }
+.table { font-size: 18px; }
+.table th { font-size: 13px; }
+.text-muted { color: var(--color-neutral-700); }
+.input, .field > label { font-size: 17px; }
+a:hover { color: var(--color-accent-700); }
+
+/* — layout — */
+.wrap { width: 100%; max-width: var(--wrap); margin-inline: auto; padding-inline: 20px; }
+.wrap-narrow { max-width: var(--wrap-narrow); }
+.section { padding-block: clamp(40px, 6vw, 72px); }
+.section + .section { border-top: 1px solid var(--color-divider); }
+.stack-sm > * + * { margin-top: var(--space-2); }
+.grid { display: grid; gap: var(--space-6); }
+@media (min-width: 700px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 900px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 700px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .grid-4 { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 760px) { .split { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(32px, 5vw, 64px); align-items: start; } }
+
+.kicker {
+  font-family: var(--font-heading); font-size: 14px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--color-accent-2-700); margin: 0 0 var(--space-2);
+}
+.rule { height: 1px; background: var(--color-divider); border: 0; margin: 0; }
+.section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-6); }
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* — demo bar — */
+.demobar {
+  background: var(--color-accent-900); color: #f2efe7; font-size: 15px;
+  padding: 9px 20px; text-align: center; letter-spacing: 0.02em;
+  border-bottom: 1px solid var(--color-accent-2-700);
+}
+.demobar strong { font-weight: 600; }
+
+/* — header / nav — */
+.site-header { background: var(--color-bg); border-bottom: 1px solid var(--color-divider); position: sticky; top: 0; z-index: 40; }
+.header-inner { display: flex; align-items: center; gap: var(--space-4); padding-block: 14px; }
+/* Lockup: sygnet i blok tekstu mają wspólną wysokość; linia gruntu sygnetu
+   stoi na linii bazowej „ANDRYCHÓW”, tak jak w oficjalnym znaku napis stoi
+   pod rysunkiem. Bez pionowej kreski — relację niesie wyrównanie. */
+.brand { display: flex; align-items: flex-end; gap: 14px; text-decoration: none; color: inherit; margin-right: auto; }
+/* Sygnet (św. Stanisław + bryła kościoła) — sam znak, bez napisu z logo;
+   nazwę składa obok krój nagłówkowy, więc pozostaje czytelna w każdym rozmiarze. */
+.brand-mark { height: 58px; width: auto; flex: none; display: block; margin-bottom: -2px; }
+.brand-text { display: block; }
+.brand-name { display: block; font-family: var(--font-heading); font-size: 21px; font-weight: 600; line-height: 1.08; letter-spacing: 0.005em; color: var(--color-text); }
+.brand-long { font-style: italic; font-weight: 500; color: var(--color-accent-700); }
+.brand-sub { display: block; font-family: var(--font-heading); font-size: 13px; font-weight: 600; line-height: 1; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-accent-2-700); margin-top: 6px; }
+.mainnav { display: none; }
+.mainnav ul { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.mainnav > ul > li { position: relative; }
+.navlink {
+  display: inline-flex; align-items: center; gap: 6px; padding: 12px 14px; min-height: 44px;
+  font-family: var(--font-heading); font-size: 18px; color: var(--color-text); text-decoration: none; border-radius: var(--radius-md);
+  background: none; border: 0; cursor: pointer; font-weight: var(--font-heading-weight);
+}
+.navlink:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); color: var(--color-accent-700); }
+.navlink[aria-current="page"] { color: var(--color-accent-700); box-shadow: inset 0 -2px 0 var(--color-accent); border-radius: 0; }
+.submenu {
+  position: absolute; top: 100%; left: 0; min-width: 250px; display: none; flex-direction: column;
+  background: var(--color-bg); border: 1px solid var(--color-divider); box-shadow: var(--shadow-md);
+  padding: 6px; z-index: 50; border-radius: var(--radius-md);
+}
+.has-sub:hover .submenu, .has-sub:focus-within .submenu, .submenu.open { display: flex; }
+.submenu .navlink { width: 100%; justify-content: flex-start; font-size: 17px; }
+.nav-live {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 10px 18px;
+  border: 1px solid var(--color-accent); color: var(--color-accent-700); text-decoration: none;
+  font-family: var(--font-heading); font-weight: 600; font-size: 17px; border-radius: var(--radius-md); background: none; cursor: pointer;
+}
+.nav-live:hover { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
+.burger { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 14px; background: none; border: 1px solid var(--color-divider); border-radius: var(--radius-md); font: inherit; font-size: 17px; cursor: pointer; color: inherit; }
+@media (min-width: 1180px) { .mainnav { display: block; } .burger { display: none; } }
+.nav-live { background: var(--color-accent-700); color: #f7f4ee; border-color: var(--color-accent-700); }
+.nav-live:hover { background: var(--color-accent-800); color: #fff; }
+
+.mobilenav { border-top: 1px solid var(--color-divider); background: var(--color-bg); }
+.mobilenav ul { list-style: none; margin: 0; padding: 8px 0 20px; }
+.mobilenav a, .mobilenav button {
+  display: block; width: 100%; text-align: left; padding: 14px 20px; min-height: 52px;
+  font-family: var(--font-heading); font-size: 19px; color: inherit; text-decoration: none;
+  background: none; border: 0; border-bottom: 1px solid var(--color-divider); cursor: pointer;
+}
+.mobilenav .sub a { padding-left: 40px; font-size: 17px; font-family: var(--font-body); }
+
+/* — hero: strona tytułowa, nie baner —
+   Fotografia kościoła jako „plate”, obok nazwa złożona jak karta tytułowa,
+   sygnet jako drobny złoty przerywnik i dzisiejsze godziny Mszy. */
+.hero-id { padding-block: clamp(20px, 3.5vw, 48px) clamp(24px, 3.5vw, 44px); }
+.hero-grid { display: grid; gap: clamp(20px, 3vw, 40px); align-items: center; }
+@media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: clamp(36px, 4.5vw, 64px); } }
+.hero-fig { margin: 0; min-width: 0; }
+.hero-photo { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 60%; }
+.hero-text { min-width: 0; }
+.hero-title { margin: 0; font-size: clamp(34px, 5vw, 56px); line-height: 1.04; font-weight: 500; color: var(--color-text); text-wrap: balance; }
+.hero-title-sub { display: block; font-style: italic; font-weight: 400; font-size: 0.62em; line-height: 1.2; margin-top: 8px; color: var(--color-accent-700); }
+.hero-diocese { margin: clamp(14px, 1.8vw, 20px) 0 0; font-size: 18px; line-height: 1.5; color: var(--color-neutral-700); }
+.hero-today { margin-top: clamp(20px, 2.6vw, 30px); padding-top: 16px; border-top: 1px solid var(--color-divider); }
+.hero-today-label { margin: 0 0 8px; font-family: var(--font-heading); font-size: 14px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-accent-2-700); }
+.hero-times { display: flex; flex-wrap: wrap; gap: 6px 22px; list-style: none; margin: 0 0 10px; padding: 0; }
+.hero-times li { font-family: var(--font-heading); font-size: clamp(28px, 3.2vw, 36px); font-weight: 600; line-height: 1.15; color: var(--color-text); font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "lnum" 1, "tnum" 1; }
+.hero-today a { font-size: 18px; }
+
+/* — quick actions — złożone jak spis treści: hairline'y, etykieta + opis */
+.quick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--color-divider); border: 1px solid var(--color-divider); border-top: 0; }
+@media (min-width: 860px) { .quick { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.quick a {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0;
+  min-height: 128px; padding: 20px 20px 18px; background: var(--color-bg); color: var(--color-text);
+  text-decoration: none; box-shadow: inset 0 3px 0 transparent;
+}
+.quick a:hover { background: var(--color-accent-100); box-shadow: inset 0 3px 0 var(--color-accent-2-500); }
+.quick a:focus-visible { outline-offset: -3px; }
+.quick svg { stroke: var(--color-accent); margin-bottom: 8px; flex: none; }
+.quick-label { font-family: var(--font-heading); font-weight: 600; font-size: 24px; line-height: 1.1; color: var(--color-text); }
+.quick-sub { font-size: 16px; line-height: 1.35; color: var(--color-neutral-700); }
+@media (max-width: 380px) {
+  .quick a { padding: 16px 14px; min-height: 120px; }
+  .quick-label { font-size: 21px; }
+  .quick-sub { font-size: 15.5px; }
+}
+
+/* Transmisja — jedyny pełny blok koloru na stronie: najważniejszy cel dla
+   starszych parafian. Głęboka zieleń, złoty hairline wewnątrz. */
+.quick-live {
+  display: flex; align-items: center; gap: clamp(14px, 2.4vw, 24px);
+  min-height: 112px; padding: 20px clamp(18px, 3vw, 32px); text-decoration: none;
+  background: var(--color-accent-800); color: #f7f4ee;
+  border: 1px solid var(--color-accent-800); box-shadow: inset 0 0 0 5px var(--color-accent-800), inset 0 0 0 6px color-mix(in srgb, var(--color-accent-2-400) 70%, transparent);
+}
+.quick-live:hover { background: var(--color-accent-900); color: #fff; border-color: var(--color-accent-900); box-shadow: inset 0 0 0 5px var(--color-accent-900), inset 0 0 0 6px var(--color-accent-2-400); }
+.quick-live:focus-visible { outline: 3px solid var(--color-accent-2-600); outline-offset: 3px; }
+.live-icon { flex: none; display: grid; place-items: center; width: 58px; height: 58px; border: 1px solid var(--color-accent-2-400); border-radius: 50%; }
+.live-icon svg { stroke: var(--color-accent-2-300); }
+.live-text { flex: 1; min-width: 0; }
+.quick-live .live-label { display: block; font-family: var(--font-heading); font-weight: 600; font-size: clamp(24px, 4vw, 32px); line-height: 1.12; }
+.quick-live .live-sub { display: block; font-size: 18px; margin-top: 4px; color: #e4dfd3; }
+.live-arrow { flex: none; stroke: var(--color-accent-2-300); }
+@media (max-width: 480px) { .live-arrow { display: none; } }
+@media (max-width: 380px) {
+  .quick-live { padding: 18px 16px; gap: 12px; }
+  .live-icon { width: 48px; height: 48px; }
+  .live-icon svg { width: 24px; height: 24px; }
+  .quick-live .live-sub { font-size: 17px; }
+}
+
+/* — mass times — */
+.today-times { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.today-times li {
+  font-family: var(--font-heading); font-size: clamp(26px, 5vw, 38px); font-variant-numeric: tabular-nums;
+  border: 1px solid var(--color-accent-2-400); padding: 8px 16px; min-width: 108px; text-align: center;
+}
+.sched { width: 100%; border-collapse: collapse; }
+.sched th, .sched td { text-align: left; padding: 14px 12px; border-bottom: 1px solid var(--color-divider); vertical-align: baseline; }
+.sched th { font-family: var(--font-heading); font-weight: 600; font-size: 18px; width: 42%; }
+.sched td { font-variant-numeric: tabular-nums; letter-spacing: 0.03em; }
+
+/* — priests — */
+.priest-photo { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.section-divided { margin-top: var(--space-8); padding-top: var(--space-8); border-top: 1px solid var(--color-divider); }
+
+/* — stream page: nagłówek i odtwarzacz jak najwyżej — */
+.stream-head { padding-top: var(--space-4); padding-bottom: var(--space-3); }
+.stream-head h1 { margin: 0; font-size: clamp(26px, 4vw, 38px); }
+.stream-head p { margin: 6px 0 0; font-size: 17px; }
+.stream-wrap { padding-bottom: var(--space-8); }
+.stream-empty { color: #d8d2c7; font-size: 18px; text-align: center; padding: 24px; margin: 0; }
+.stream-consent { font: inherit; font-size: 18px; padding: 16px 26px; min-height: 56px; background: none; color: #f7f4ee; border: 2px solid var(--color-accent-2-500); cursor: pointer; }
+.stream-consent:hover { background: color-mix(in srgb, var(--color-accent-2-500) 22%, transparent); }
+.player iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+/* — kapłani pochodzący z parafii — lista chronologiczna, bez numeracji — */
+.native-list { list-style: none; margin: var(--space-6) 0 0; padding: 0; max-width: 640px; }
+.native-list li {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: 8px 20px; padding: 14px 0; border-bottom: 1px solid var(--color-divider);
+}
+.native-name { font-family: var(--font-heading); font-size: 21px; }
+.native-year { font-size: 16px; color: var(--color-neutral-700); font-variant-numeric: tabular-nums; }
+
+/* — player — */
+.player { width: 100%; max-width: 1320px; margin-inline: auto; aspect-ratio: 16 / 9; background: #171514; display: grid; place-items: center; border: 1px solid var(--color-divider); }
+
+/* — interakcje: subtelne, jednolite, nigdy nie przesuwają elementu — */
+a, .btn, .navlink, .quick a, .quick-live, .burger {
+  transition: background-color 170ms ease, color 170ms ease, border-color 170ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  a, .btn, .navlink, .quick a, .quick-live, .burger { transition: none; }
+}
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+/* — jednolita typografia liczb —
+   Godziny Mszy, intencje, daty, telefony i lata to dane, nie proza: wszędzie
+   te same cyfry wersalikowe o równej szerokości, żeby kolumny się zgadzały,
+   a liczby nie zmieniały wysokości między sekcjami. Lora domyślnie składa
+   cyfry nautyczne (różnej wysokości) — stąd wcześniejsza niespójność.
+   Bieżąca proza zachowuje domyślne cyfry Lory. */
+.tnum, .sched td, .sched th, .today-times li, .native-year, .card-meta,
+address, time, .footer p, a[href^="tel:"] {
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+}
+.sched td { letter-spacing: 0.01em; }
+/* W intencjach godzina stoi w <th> (nag\u0142\u00f3wek wiersza), w porz\u0105dku Mszy w <td>.
+   Bez tego jedna i ta sama godzina sk\u0142ada\u0142aby si\u0119 raz Cormorantem, raz Lor\u0105. */
+.sched th.tnum { font-family: var(--font-body); font-weight: 400; }
+
+/* — misc — */
+.ph {
+  display: grid; place-items: center; text-align: center; padding: 20px;
+  background-color: var(--color-neutral-200);
+  background-image: repeating-linear-gradient(135deg, transparent 0 9px, color-mix(in srgb, var(--color-neutral-500) 22%, transparent) 9px 10px);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; font-size: 13px; color: var(--color-neutral-800);
+}
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: var(--space-3); }
+.gallery-grid .ph { aspect-ratio: 4 / 3; }
+/* — footer — */
+.footer { background: var(--color-accent-900); color: #ece7dc; }
+.footer a { color: #ece7dc; text-decoration: none; }
+.footer a:hover { color: var(--color-accent-2-300); text-decoration: underline; }
+.footer h2 { color: #f7f4ee; font-size: 20px; }
+/* Stopka: złota część oryginalnego logo (sygnet + „PARAFIA ŚW. STANISŁAWA BM”),
+   wycięta z wersji transparentnej bez zmian w grafice. Granatowy wiersz
+   „W ANDRYCHOWIE” pominięty — na blue-grey miałby ok. 1,2:1 kontrastu;
+   miejscowość niesie adres tuż pod logo. Lewa krawędź napisu = lewa krawędź adresu. */
+.footer-logo { display: block; width: min(100%, 212px); height: auto; margin: -12px 0 12px -2px; }
+@media (max-width: 767px) { .footer-logo { width: min(100%, 224px); } }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.footer .rule { background: color-mix(in srgb, var(--color-accent-2-400) 40%, transparent); }
+.demo-note {
+  border-left: 3px solid var(--color-accent-2-500); background: var(--color-surface);
+  padding: 14px 18px; font-size: 16px; color: var(--color-neutral-800);
+}
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 20px; top: 10px; z-index: 100; background: var(--color-bg); padding: 12px 18px; border: 1px solid var(--color-accent); }
+
+/* ==================================================================
+   Warstwa mobilna. Wyłącznie poprawki responsywne — desktop bez zmian.
+   Zasada: żadnego overflow-x: hidden na body; naprawiamy elementy,
+   które faktycznie wypychają dokument poza viewport.
+   ================================================================== */
+
+img, svg, video, table { max-width: 100%; }
+
+@media (max-width: 1179px) {
+  /* Nagłówek: identyfikacja parafii kurczy się, sterowanie zostaje ikonami.
+     Bez min-width:0 element flex nie zejdzie poniżej swojej treści — to była
+     główna przyczyna poziomego przewijania na iPhonie. */
+  .header-inner { gap: 10px; padding-block: 10px; }
+  .brand { gap: 10px; min-width: 0; flex: 1 1 auto; }
+  .brand > span { min-width: 0; }
+  .brand-mark { height: 52px; }
+  .brand-text { min-width: 0; }
+  .brand-name { font-size: 18px; line-height: 1.15; }
+  .brand-sub { font-size: 12px; letter-spacing: 0.2em; margin-top: 3px; }
+
+  /* Ikony bez etykiet tekstowych — nazwa zostaje w aria-label. */
+  .nav-live,
+  .burger {
+    flex: none; min-width: 48px; min-height: 48px;
+    padding: 10px; justify-content: center; gap: 0;
+  }
+  .nav-live .label-text,
+  .burger .label-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
+@media (max-width: 700px) {
+  /* Jednolity margines boczny na całej stronie. */
+  .wrap { padding-inline: 20px; }
+
+  .section { padding-block: clamp(32px, 8vw, 44px); }
+  .section-head { margin-bottom: var(--space-4); }
+
+  /* Tabele godzin: długie ciągi „6:30 · 8:30 · …” mają szerokość min-content,
+     więc na wąskim ekranie rozpychały dokument. Układ przechodzi w wiersze. */
+  .sched, .sched tbody, .sched tr, .sched th, .sched td { display: block; width: 100%; }
+  .sched tr { padding-block: 12px; border-bottom: 1px solid var(--color-divider); }
+  .sched th, .sched td { padding: 0; border: 0; width: auto; }
+  .sched th { margin-bottom: 4px; }
+  .sched td { font-size: 17px; }
+  .sched caption { text-align: left; padding-bottom: 8px; }
+
+  .today-times { gap: 8px; }
+  .today-times li { min-width: 92px; padding: 8px 12px; }
+
+  .split { display: block; }
+  .split > * + * { margin-top: var(--space-8); }
+
+  /* Stopka: jedna kolumna, tło na pełną szerokość okna. */
+  .footer .grid { gap: var(--space-6); }
+  .footer .grid-3 { grid-template-columns: 1fr; }
+  .footer h2 { font-size: 19px; }
+
+  .demobar { font-size: 14px; padding: 8px 16px; line-height: 1.45; }
+
+  .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .native-list li { padding: 12px 0; }
+}
+
+/* Na telefonie pełne wezwanie zawijałoby się na cztery wiersze i rozpychało
+   nagłówek do ~157 px wysokości. Skracamy je do rozpoznawalnego rdzenia —
+   pełna nazwa pozostaje w hero, w stopce i w <title>. */
+@media (max-width: 560px) {
+  .brand-long { display: none; }
+  .brand { gap: 10px; }
+  .brand-mark { height: 38px; }
+  .brand-name { font-size: 18px; }
+  .brand-sub { font-size: 12px; margin-top: 4px; }
+}
+@media (max-width: 420px) {
+  .brand { gap: 8px; }
+  .brand-mark { height: 34px; }
+  .brand-name { font-size: 16.5px; }
+  .brand-sub { font-size: 11.5px; letter-spacing: 0.24em; }
+}
+
+@media (max-width: 359px) {
+  .wrap { padding-inline: 16px; }
+  .brand-mark { height: 30px; }
+  .header-inner { gap: 8px; }
+  .today-times li { min-width: 84px; font-size: 24px; }
+}

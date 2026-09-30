@@ -1,0 +1,68 @@
+# Środowisko demonstracyjne parafii — WordPress + MariaDB.
+#
+# Uruchomienie:  cp .env.example .env  &&  docker compose up -d
+# Motyw jest podmontowany z repozytorium (bind mount), więc edycja PHP/CSS/JS
+# na hoście działa od razu po odświeżeniu przeglądarki — bez przebudowy obrazu.
+#
+# Baza NIE publikuje portu na hoście. WordPress łączy się z nią po nazwie usługi
+# w wewnętrznej sieci Dockera. Publicznie wystawiany jest wyłącznie front WWW.
+
+services:
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - parafia
+
+  wordpress:
+    image: wordpress:6-php8.3-apache
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      # Na VPS za reverse proxy zmień na 127.0.0.1:${WORDPRESS_PORT}:80,
+      # żeby kontener nie był dostępny z zewnątrz z pominięciem proxy.
+      - "${WORDPRESS_PORT}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_TABLE_PREFIX: ${DB_TABLE_PREFIX}
+      WORDPRESS_DEBUG: ${WP_DEBUG}
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'DISALLOW_FILE_EDIT', true );
+        define( 'WP_AUTO_UPDATE_CORE', 'minor' );
+        /* Za reverse proxy: poprawne rozpoznanie HTTPS. */
+        if ( isset( $$_SERVER['HTTP_X_FORWARDED_PROTO'] ) && 'https' === $$_SERVER['HTTP_X_FORWARDED_PROTO'] ) {
+            $$_SERVER['HTTPS'] = 'on';
+        }
+    volumes:
+      # Cała instalacja WordPressa — trwała między restartami.
+      - wp_data:/var/www/html
+      # Motyw prosto z repozytorium: edytuj lokalnie, odśwież przeglądarkę.
+      - ./wordpress-theme/parafia-andrychow:/var/www/html/wp-content/themes/parafia-andrychow
+      - ./docker/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+    networks:
+      - parafia
+
+volumes:
+  db_data:
+  wp_data:
+
+networks:
+  parafia:

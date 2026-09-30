@@ -1,0 +1,8 @@
+# Lokalna konfiguracja z hasłami — nigdy w repozytorium.
+.env
+
+# Dane środowiska uruchomieniowego.
+wordpress/
+*.sql
+*.sql.gz
+backup/
