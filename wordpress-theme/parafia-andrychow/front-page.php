@@ -117,7 +117,7 @@ $news = new WP_Query(
 );
 if ( $news->have_posts() ) :
 	?>
-	<section class="section wrap" aria-labelledby="h-akt" style="border-top:1px solid var(--color-divider);margin-top:clamp(36px,5vw,56px)">
+	<section class="section wrap home-news" aria-labelledby="h-akt">
 		<div class="section-head" style="margin-bottom:var(--space-4)">
 			<div>
 				<p class="kicker" style="margin:0"><?php esc_html_e( 'Ogłoszenia', 'parafia' ); ?></p>
@@ -152,7 +152,7 @@ if ( $news->have_posts() ) :
 	<?php
 else :
 	// Bez ogłoszeń: zachowujemy odstęp między kaflami a stopką.
-	echo '<div style="padding-bottom:clamp(36px,5vw,56px)"></div>';
+	echo '<div class="home-news-spacer"></div>';
 endif;
 
 get_footer();
