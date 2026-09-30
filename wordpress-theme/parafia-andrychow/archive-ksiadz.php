@@ -42,21 +42,40 @@ $rodacy = get_posts(
 <div class="wrap section">
 	<p class="kicker"><?php esc_html_e( 'Nasi księża', 'parafia' ); ?></p>
 	<h1><?php esc_html_e( 'Nasi księża', 'parafia' ); ?></h1>
+	<?php if ( parafia_opt( 'tryb_demo' ) ) : ?>
+		<p class="demo-note"><?php esc_html_e( 'Dane demonstracyjne.', 'parafia' ); ?></p>
+	<?php endif; ?>
 
-	<section>
+	<section style="margin-top:var(--space-8)">
 		<h2><?php esc_html_e( 'Duszpasterze parafii', 'parafia' ); ?></h2>
 		<?php if ( $duszpasterze ) : ?>
-			<div class="grid grid-4">
+			<div class="grid grid-4" style="margin-top:var(--space-6)">
 				<?php foreach ( $duszpasterze as $ksiadz ) : ?>
+					<?php
+					$tel   = get_post_meta( $ksiadz->ID, '_parafia_telefon', true );
+					$email = get_post_meta( $ksiadz->ID, '_parafia_email', true );
+					$opis  = wp_strip_all_tags( $ksiadz->post_content );
+					?>
 					<article class="card">
-						<?php echo get_the_post_thumbnail( $ksiadz, 'parafia-portrait', array( 'class' => 'priest-photo', 'loading' => 'lazy' ) ); ?>
-						<h3 class="card-title"><?php echo esc_html( get_the_title( $ksiadz ) ); ?></h3>
-						<p class="card-meta"><?php echo esc_html( get_post_meta( $ksiadz->ID, '_parafia_rola', true ) ); ?></p>
-						<?php
-						$tel = get_post_meta( $ksiadz->ID, '_parafia_telefon', true );
-						if ( $tel ) :
-							?>
-							<p class="card-body"><a href="tel:<?php echo esc_attr( preg_replace( '/\s+/', '', $tel ) ); ?>"><?php echo esc_html( $tel ); ?></a></p>
+						<?php if ( has_post_thumbnail( $ksiadz ) ) : ?>
+							<?php echo get_the_post_thumbnail( $ksiadz, 'parafia-portrait', array( 'class' => 'priest-photo', 'loading' => 'lazy' ) ); ?>
+						<?php else : ?>
+							<div class="ph priest-photo"><?php esc_html_e( 'portret', 'parafia' ); ?></div>
+						<?php endif; ?>
+						<h3 class="card-title" style="margin:0"><?php echo esc_html( get_the_title( $ksiadz ) ); ?></h3>
+						<p class="card-meta" style="margin:0"><?php echo esc_html( get_post_meta( $ksiadz->ID, '_parafia_rola', true ) ); ?></p>
+						<?php if ( $tel || $email ) : ?>
+							<p class="card-body" style="margin:0">
+								<?php if ( $tel ) : ?>
+									<a href="<?php echo esc_url( parafia_tel_href( $tel ), array( 'tel' ) ); ?>"><?php echo esc_html( $tel ); ?></a>
+								<?php endif; ?>
+								<?php if ( $tel && $email ) : ?><br /><?php endif; ?>
+								<?php if ( $email ) : ?>
+									<a href="<?php echo esc_url( 'mailto:' . antispambot( $email ) ); ?>"><?php echo esc_html( antispambot( $email ) ); ?></a>
+								<?php endif; ?>
+							</p>
+						<?php elseif ( $opis ) : ?>
+							<p class="card-body" style="margin:0"><?php echo esc_html( wp_trim_words( $opis, 20 ) ); ?></p>
 						<?php endif; ?>
 					</article>
 				<?php endforeach; ?>
@@ -67,9 +86,9 @@ $rodacy = get_posts(
 	</section>
 
 	<?php if ( $rodacy ) : ?>
-		<section class="section-divided">
+		<section style="margin-top:var(--space-8);padding-top:var(--space-8);border-top:1px solid var(--color-divider)">
 			<h2><?php esc_html_e( 'Kapłani pochodzący z naszej parafii', 'parafia' ); ?></h2>
-			<p><?php esc_html_e( 'Kapłani pochodzący z parafii św. Stanisława Biskupa i Męczennika w Andrychowie.', 'parafia' ); ?></p>
+			<p style="max-width:640px"><?php esc_html_e( 'Kapłani pochodzący z parafii św. Stanisława Biskupa i Męczennika w Andrychowie.', 'parafia' ); ?></p>
 			<ul class="native-list">
 				<?php foreach ( $rodacy as $ksiadz ) : ?>
 					<li>

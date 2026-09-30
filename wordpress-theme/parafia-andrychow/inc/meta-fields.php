@@ -21,8 +21,26 @@ add_action(
 	function () {
 		add_meta_box( 'parafia-ksiadz', __( 'Dane kontaktowe', 'parafia' ), 'parafia_ksiadz_box', 'ksiadz', 'normal', 'high' );
 		add_meta_box( 'parafia-intencje', __( 'Intencje w tym tygodniu', 'parafia' ), 'parafia_intencje_box', 'intencja', 'normal', 'high' );
+		add_meta_box( 'parafia-strona', __( 'Układ strony', 'parafia' ), 'parafia_strona_box', 'page', 'side', 'default' );
 	}
 );
+
+/**
+ * Metabox strony: nadtytuł i odnośnik do kancelarii pod treścią.
+ *
+ * @param WP_Post $post Edytowana strona.
+ */
+function parafia_strona_box( $post ) {
+	wp_nonce_field( 'parafia_strona', 'parafia_strona_nonce' );
+	?>
+	<p><label for="parafia_kicker"><strong><?php esc_html_e( 'Nadtytuł', 'parafia' ); ?></strong></label><br>
+	<input type="text" class="widefat" id="parafia_kicker" name="parafia_kicker" value="<?php echo esc_attr( get_post_meta( $post->ID, '_parafia_kicker', true ) ); ?>" placeholder="<?php esc_attr_e( 'np. Sakramenty', 'parafia' ); ?>"></p>
+	<p class="description"><?php esc_html_e( 'Mały napis nad tytułem. Puste = tytuł strony nadrzędnej.', 'parafia' ); ?></p>
+	<p><label><input type="checkbox" name="parafia_bez_kancelarii" value="1" <?php checked( get_post_meta( $post->ID, '_parafia_bez_kancelarii', true ), '1' ); ?>>
+	<?php esc_html_e( 'Ukryj odnośnik „Sprawy formalne … kancelaria” pod treścią', 'parafia' ); ?></label></p>
+	<p class="description"><?php esc_html_e( 'Zajawka strony (panel „Zajawka”) wyświetla się jako większy akapit wprowadzający pod tytułem.', 'parafia' ); ?></p>
+	<?php
+}
 
 /**
  * Metabox księdza.
@@ -109,6 +127,11 @@ add_action(
 			update_post_meta( $post_id, '_parafia_email', sanitize_email( wp_unslash( $_POST['parafia_email'] ?? '' ) ) );
 			update_post_meta( $post_id, '_parafia_rodzic', ( 'rodak' === ( $_POST['parafia_rodzic'] ?? '' ) ) ? 'rodak' : '' );
 			update_post_meta( $post_id, '_parafia_rok_swiecen', absint( $_POST['parafia_rok_swiecen'] ?? 0 ) ?: '' );
+		}
+
+		if ( isset( $_POST['parafia_strona_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['parafia_strona_nonce'] ) ), 'parafia_strona' ) ) {
+			update_post_meta( $post_id, '_parafia_kicker', sanitize_text_field( wp_unslash( $_POST['parafia_kicker'] ?? '' ) ) );
+			update_post_meta( $post_id, '_parafia_bez_kancelarii', empty( $_POST['parafia_bez_kancelarii'] ) ? '' : '1' );
 		}
 
 		if ( isset( $_POST['parafia_intencje_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['parafia_intencje_nonce'] ) ), 'parafia_intencje' ) ) {

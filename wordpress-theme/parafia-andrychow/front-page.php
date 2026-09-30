@@ -1,10 +1,14 @@
 <?php
 /**
- * Strona główna — bramka, nie streszczenie serwisu.
+ * Strona główna — bramka, nie streszczenie serwisu. Markup 1:1 z prototypu:
+ * fotografia kościoła + tożsamość parafii + dzisiejsze Msze → transmisja →
+ * cztery kafle → dwa ostatnie ogłoszenia → stopka.
  *
- * Świadomie krótka: tożsamość parafii → pięć głównych akcji (z wyróżnioną
- * transmisją) → krótka zajawka aktualności → stopka. Porządek Mszy, księża,
- * kancelaria i sakramenty mają własne strony i tam pozostają.
+ * Treści zarządzane z WordPressa:
+ * - fotografia: Wygląd → Dostosuj → Fotografia na stronie głównej (domyślnie zdjęcie z motywu),
+ * - nazwa, adres, diecezja: Parafia → Tożsamość parafii / Kontakt,
+ * - godziny Mszy: Parafia → Porządek Mszy Świętych,
+ * - ogłoszenia: Ogłoszenia.
  *
  * @package Parafia
  */
@@ -13,82 +17,142 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 
-$hero = (int) get_theme_mod( 'parafia_hero_image' );
+$schedule = parafia_today_schedule();
+$hero_id  = (int) get_theme_mod( 'parafia_hero_image' );
+$hero_alt = __( 'Kościół św. Stanisława Biskupa i Męczennika w Andrychowie od strony ulicy — wieża z krzyżami i zielone dachy', 'parafia' );
+$kicker   = implode( ' · ', array_filter( array( parafia_opt( 'miejscowosc' ), parafia_address_first_line() ) ) );
 ?>
 
-<?php if ( $hero ) : ?>
-	<div class="hero">
-		<?php
-		echo wp_get_attachment_image(
-			$hero,
-			'parafia-hero',
-			false,
-			array(
-				'class'         => 'hero-photo plate',
-				'fetchpriority' => 'high',
-				'decoding'      => 'async',
-				'alt'           => esc_attr( get_bloginfo( 'name' ) ),
-			)
-		);
-		?>
+<section class="hero-id" aria-labelledby="h-parafia">
+	<div class="wrap hero-grid">
+		<figure class="hero-fig">
+			<?php
+			if ( $hero_id && wp_attachment_is_image( $hero_id ) ) {
+				$alt = trim( (string) get_post_meta( $hero_id, '_wp_attachment_image_alt', true ) );
+				echo wp_get_attachment_image(
+					$hero_id,
+					'parafia-hero',
+					false,
+					array(
+						'class'         => 'hero-photo plate',
+						'alt'           => $alt ? $alt : $hero_alt,
+						'fetchpriority' => 'high',
+						'loading'       => false,
+						'decoding'      => 'async',
+						'sizes'         => '(min-width: 1180px) 600px, (min-width: 900px) 52vw, 100vw',
+					)
+				);
+			} else {
+				printf(
+					'<img class="hero-photo plate" src="%1$s" alt="%2$s" fetchpriority="high" decoding="async" />',
+					esc_url( parafia_img( 'kosciol-dzien.jpg' ) ),
+					esc_attr( $hero_alt )
+				);
+			}
+			?>
+		</figure>
+		<div class="hero-text">
+			<?php if ( $kicker ) : ?>
+				<p class="kicker"><?php echo esc_html( $kicker ); ?></p>
+			<?php endif; ?>
+			<h1 id="h-parafia" class="hero-title"><?php echo esc_html( parafia_opt( 'nazwa' ) ); ?> <?php if ( parafia_opt( 'wezwanie' ) ) : ?><span class="hero-title-sub"><?php echo esc_html( parafia_opt( 'wezwanie' ) ); ?></span><?php endif; ?></h1>
+			<?php if ( parafia_opt( 'diecezja' ) ) : ?>
+				<p class="hero-diocese"><?php echo esc_html( parafia_opt( 'diecezja' ) ); ?></p>
+			<?php endif; ?>
+			<div class="hero-today">
+				<p class="hero-today-label"><?php esc_html_e( 'Msze Święte dzisiaj', 'parafia' ); ?></p>
+				<?php if ( $schedule['times'] ) : ?>
+					<ul class="hero-times">
+						<?php foreach ( $schedule['times'] as $time ) : ?>
+							<li><?php echo esc_html( $time ); ?></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php else : ?>
+					<p style="margin:0 0 10px"><?php esc_html_e( 'Porządek Mszy na dziś nie został jeszcze uzupełniony.', 'parafia' ); ?></p>
+				<?php endif; ?>
+				<a href="<?php echo esc_url( parafia_page_url( 'msze' ) ); ?>"><?php esc_html_e( 'Pełny porządek Mszy →', 'parafia' ); ?></a>
+			</div>
+		</div>
 	</div>
-<?php endif; ?>
-
-<div class="wrap hero-title">
-	<h1><?php bloginfo( 'name' ); ?></h1>
-	<p class="text-muted"><?php bloginfo( 'description' ); ?></p>
-</div>
+</section>
 
 <div class="wrap">
-	<nav class="quick" aria-label="<?php esc_attr_e( 'Najważniejsze informacje', 'parafia' ); ?>">
-		<a href="<?php echo esc_url( home_url( '/msze/' ) ); ?>"><?php esc_html_e( 'Msze', 'parafia' ); ?></a>
-		<a href="<?php echo esc_url( get_post_type_archive_link( 'intencja' ) ); ?>"><?php esc_html_e( 'Intencje', 'parafia' ); ?></a>
-		<a href="<?php echo esc_url( get_post_type_archive_link( 'aktualnosc' ) ); ?>"><?php esc_html_e( 'Ogłoszenia', 'parafia' ); ?></a>
-		<a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>"><?php esc_html_e( 'Kontakt', 'parafia' ); ?></a>
-	</nav>
-
-	<a class="quick-live" href="<?php echo esc_url( home_url( '/transmisja/' ) ); ?>">
-		<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="m16 13 5.2 3.1a1 1 0 0 0 1.5-.9V8.8a1 1 0 0 0-1.5-.9L16 11"></path><rect x="1.5" y="5.5" width="14.5" height="13" rx="2"></rect></svg>
-		<span>
-			<span class="live-label"><?php esc_html_e( 'Transmisja na żywo', 'parafia' ); ?></span>
-			<span class="live-sub"><?php esc_html_e( 'Oglądaj Mszę Świętą', 'parafia' ); ?></span>
+	<a class="quick-live" href="<?php echo esc_url( parafia_page_url( 'transmisja' ) ); ?>">
+		<span class="live-icon" aria-hidden="true">
+			<?php echo parafia_icon( 'live' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		</span>
+		<span class="live-text">
+			<span class="live-label"><?php esc_html_e( 'Transmisja na żywo', 'parafia' ); ?></span>
+			<span class="live-sub"><?php esc_html_e( 'Oglądaj Mszę Świętą z naszego kościoła', 'parafia' ); ?></span>
+		</span>
+		<?php echo parafia_icon( 'arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 	</a>
+	<nav class="quick" aria-label="<?php esc_attr_e( 'Najważniejsze informacje', 'parafia' ); ?>">
+		<?php
+		$tiles = array(
+			array( parafia_page_url( 'msze' ), 'clock', __( 'Msze', 'parafia' ), __( 'Porządek i godziny', 'parafia' ) ),
+			array( parafia_archive_url( 'intencja', 'intencje' ), 'calendar', __( 'Intencje', 'parafia' ), __( 'Na bieżący tydzień', 'parafia' ) ),
+			array( parafia_archive_url( 'aktualnosc', 'aktualnosci' ), 'megaphone', __( 'Ogłoszenia', 'parafia' ), __( 'Sprawy parafii', 'parafia' ) ),
+			array( parafia_page_url( 'kontakt' ), 'phone', __( 'Kontakt', 'parafia' ), __( 'Kancelaria i adres', 'parafia' ) ),
+		);
+		foreach ( $tiles as $tile ) :
+			?>
+			<a href="<?php echo esc_url( $tile[0] ); ?>">
+				<?php echo parafia_icon( $tile[1] ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<span class="quick-label"><?php echo esc_html( $tile[2] ); ?></span>
+				<span class="quick-sub"><?php echo esc_html( $tile[3] ); ?></span>
+			</a>
+		<?php endforeach; ?>
+	</nav>
 </div>
 
 <?php
-$news = new WP_Query( array( 'post_type' => 'aktualnosc', 'posts_per_page' => 2, 'ignore_sticky_posts' => true ) );
+$news = new WP_Query(
+	array(
+		'post_type'           => 'aktualnosc',
+		'posts_per_page'      => 2,
+		'ignore_sticky_posts' => true,
+		'no_found_rows'       => true,
+	)
+);
 if ( $news->have_posts() ) :
 	?>
-	<section class="section wrap" aria-labelledby="h-akt">
-		<div class="section-head">
+	<section class="section wrap" aria-labelledby="h-akt" style="border-top:1px solid var(--color-divider);margin-top:clamp(36px,5vw,56px)">
+		<div class="section-head" style="margin-bottom:var(--space-4)">
 			<div>
-				<p class="kicker"><?php esc_html_e( 'Ogłoszenia', 'parafia' ); ?></p>
-				<h2 id="h-akt"><?php esc_html_e( 'Ostatnie ogłoszenia', 'parafia' ); ?></h2>
+				<p class="kicker" style="margin:0"><?php esc_html_e( 'Ogłoszenia', 'parafia' ); ?></p>
+				<h2 id="h-akt" style="margin:0"><?php esc_html_e( 'Ostatnie ogłoszenia', 'parafia' ); ?></h2>
 			</div>
-			<a href="<?php echo esc_url( get_post_type_archive_link( 'aktualnosc' ) ); ?>"><?php esc_html_e( 'Wszystkie ogłoszenia →', 'parafia' ); ?></a>
+			<a href="<?php echo esc_url( parafia_archive_url( 'aktualnosc', 'aktualnosci' ) ); ?>"><?php esc_html_e( 'Wszystkie ogłoszenia →', 'parafia' ); ?></a>
 		</div>
-
 		<?php
 		$first = true;
 		while ( $news->have_posts() ) :
 			$news->the_post();
-			?>
-			<article class="teaser">
-				<p class="card-meta"><time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time></p>
-				<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-				<?php if ( $first ) : ?>
-					<p><?php echo esc_html( wp_trim_words( get_the_excerpt(), 28 ) ); ?></p>
-					<p><a href="<?php the_permalink(); ?>"><?php esc_html_e( 'Czytaj więcej', 'parafia' ); ?></a></p>
-				<?php endif; ?>
-			</article>
-			<?php
+			if ( $first ) :
+				?>
+				<article style="border-top:1px solid var(--color-divider);padding-top:var(--space-4);max-width:760px">
+					<p class="card-meta" style="margin:0 0 6px"><time datetime="<?php echo esc_attr( get_the_date( 'Y-m-d' ) ); ?>"><?php echo esc_html( parafia_post_date() ); ?></time></p>
+					<h3 style="margin:0 0 10px;font-size:26px"><a href="<?php the_permalink(); ?>" style="color:inherit;text-decoration:none"><?php the_title(); ?></a></h3>
+					<p style="margin:0 0 10px"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 28 ) ); ?></p>
+					<a href="<?php the_permalink(); ?>"><?php esc_html_e( 'Czytaj więcej', 'parafia' ); ?><span class="screen-reader-text">: <?php the_title(); ?></span></a>
+				</article>
+			<?php else : ?>
+				<article style="border-top:1px solid var(--color-divider);padding-top:var(--space-4);margin-top:var(--space-4);max-width:760px">
+					<p class="card-meta" style="margin:0 0 6px"><time datetime="<?php echo esc_attr( get_the_date( 'Y-m-d' ) ); ?>"><?php echo esc_html( parafia_post_date() ); ?></time></p>
+					<h3 style="margin:0;font-size:22px"><a href="<?php the_permalink(); ?>" style="color:inherit;text-decoration:none"><?php the_title(); ?></a></h3>
+				</article>
+				<?php
+			endif;
 			$first = false;
 		endwhile;
 		wp_reset_postdata();
 		?>
 	</section>
 	<?php
+else :
+	// Bez ogłoszeń: zachowujemy odstęp między kaflami a stopką.
+	echo '<div style="padding-bottom:clamp(36px,5vw,56px)"></div>';
 endif;
 
 get_footer();

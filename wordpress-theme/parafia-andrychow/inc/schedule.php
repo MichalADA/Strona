@@ -45,10 +45,18 @@ function parafia_today_schedule() {
 		$note  = __( 'Porządek wakacyjny (lipiec i sierpień).', 'parafia' );
 	} elseif ( $advent ) {
 		$times = parafia_parse_times( parafia_opt( 'msze_adwent' ) );
-		$note  = __( 'Porządek adwentowy.', 'parafia' );
+		$note  = $times
+			/* translators: %s: godzina pierwszej Mszy (roraty). */
+			? sprintf( __( 'Porządek adwentowy. Roraty o %s.', 'parafia' ), $times[0] )
+			: __( 'Porządek adwentowy.', 'parafia' );
 	} else {
-		$times = parafia_parse_times( parafia_opt( 'msze_powszednie' ) );
-		$note  = __( 'Zwykły porządek dnia powszedniego.', 'parafia' );
+		$times     = parafia_parse_times( parafia_opt( 'msze_powszednie' ) );
+		$note      = __( 'Zwykły porządek dnia powszedniego.', 'parafia' );
+		$zniesione = parafia_parse_times( parafia_opt( 'msze_swieta_zniesione' ) );
+		if ( $zniesione ) {
+			/* translators: %s: godziny Mszy w święta zniesione. */
+			$note .= ' ' . sprintf( __( 'W święta zniesione: %s.', 'parafia' ), implode( ', ', $zniesione ) );
+		}
 	}
 
 	$dni   = array( 'niedziela', 'poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota' );

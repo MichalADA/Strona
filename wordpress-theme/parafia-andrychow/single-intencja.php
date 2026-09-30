@@ -1,6 +1,6 @@
 <?php
 /**
- * Tydzień intencji mszalnych.
+ * Tydzień intencji mszalnych — ten sam układ co bieżący tydzień w prototypie.
  *
  * @package Parafia
  */
@@ -13,39 +13,15 @@ get_header();
 	<?php
 	while ( have_posts() ) :
 		the_post();
-		$rows = get_post_meta( get_the_ID(), '_parafia_intencje', true );
-		$rows = is_array( $rows ) ? $rows : array();
 		?>
 		<p class="kicker"><?php esc_html_e( 'Intencje mszalne', 'parafia' ); ?></p>
-		<h1><?php the_title(); ?></h1>
-
-		<?php if ( ! $rows ) : ?>
-			<p><?php esc_html_e( 'Intencje na ten okres nie zostały jeszcze opublikowane.', 'parafia' ); ?></p>
-		<?php else : ?>
-			<?php
-			$grouped = array();
-			foreach ( $rows as $row ) {
-				$grouped[ $row['dzien'] ][] = $row;
-			}
-			foreach ( $grouped as $dzien => $items ) :
-				?>
-				<section>
-					<h2><?php echo esc_html( $dzien ? wp_date( 'l, j F Y', strtotime( $dzien ) ) : '' ); ?></h2>
-					<table class="sched">
-						<tbody>
-						<?php foreach ( $items as $item ) : ?>
-							<tr>
-								<th scope="row" class="tnum"><?php echo esc_html( $item['godzina'] ); ?></th>
-								<td><?php echo esc_html( $item['tresc'] ); ?></td>
-							</tr>
-						<?php endforeach; ?>
-						</tbody>
-					</table>
-				</section>
-				<?php
-			endforeach;
-			?>
-		<?php endif; ?>
+		<h1><?php esc_html_e( 'Intencje mszalne', 'parafia' ); ?></h1>
+		<p class="text-muted" style="font-size:19px"><?php echo esc_html( sprintf( __( 'Tydzień %s', 'parafia' ), get_the_title() ) ); ?></p>
+		<div style="display:flex;flex-wrap:wrap;gap:12px;margin-block:var(--space-6)">
+			<a class="btn btn-secondary" href="<?php echo esc_url( parafia_page_url( 'msze' ) ); ?>"><?php esc_html_e( 'Porządek Mszy Świętych', 'parafia' ); ?></a>
+			<a class="btn btn-secondary" href="<?php echo esc_url( add_query_arg( 'widok', 'archiwum', parafia_archive_url( 'intencja', 'intencje' ) ) ); ?>"><?php esc_html_e( 'Archiwum intencji', 'parafia' ); ?></a>
+		</div>
+		<?php parafia_render_intencje_week( get_post() ); ?>
 	<?php endwhile; ?>
 </div>
 <?php

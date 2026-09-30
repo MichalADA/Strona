@@ -1,6 +1,6 @@
 <?php
 /**
- * Archiwa (aktualności, galerie, intencje).
+ * Archiwa pozostałych typów treści — lista w układzie ogłoszeń z prototypu.
  *
  * @package Parafia
  */
@@ -9,19 +9,11 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 ?>
-<div class="wrap section">
-	<h1>
-		<?php
-		if ( is_post_type_archive( 'aktualnosc' ) ) {
-			esc_html_e( 'Ogłoszenia parafialne', 'parafia' );
-		} else {
-			post_type_archive_title();
-		}
-		?>
-	</h1>
+<div class="wrap wrap-narrow section">
+	<h1><?php the_archive_title(); ?></h1>
 
 	<?php if ( have_posts() ) : ?>
-		<div class="grid grid-3">
+		<div style="margin-top:var(--space-8);display:grid;gap:var(--space-6)">
 			<?php
 			while ( have_posts() ) :
 				the_post();
@@ -29,9 +21,7 @@ get_header();
 			endwhile;
 			?>
 		</div>
-		<nav class="pagination" aria-label="<?php esc_attr_e( 'Stronicowanie', 'parafia' ); ?>">
-			<?php the_posts_pagination( array( 'mid_size' => 1 ) ); ?>
-		</nav>
+		<?php the_posts_pagination( array( 'mid_size' => 1, 'screen_reader_text' => __( 'Stronicowanie', 'parafia' ) ) ); ?>
 	<?php else : ?>
 		<p><?php esc_html_e( 'Brak wpisów w tym dziale.', 'parafia' ); ?></p>
 	<?php endif; ?>

@@ -8,13 +8,17 @@ Wersja **demonstracyjna** projektu nowej strony parafii. Nie jest to oficjalny s
 
 | Ścieżka | Co to jest |
 | --- | --- |
-| `Parafia św. Stanisława.dc.html` | Klikalny prototyp front-endu (HTML). Do pokazania księdzu proboszczowi na telefonie/laptopie, bez potrzeby stawiania WordPressa. |
-| `styles.css`, `parish.css` | Warstwa wizualna prototypu: system projektowy + adaptacja parafialna. |
+| `Parafia św. Stanisława - zieleń.dc.html` | **Wzorzec wyglądu i UX** — klikalny prototyp front-endu w wersji zielonej (obowiązującej). Motyw WordPress odwzorowuje go 1:1. Nie modyfikować. |
+| `Parafia św. Stanisława.dc.html` | Wcześniejszy wariant kolorystyczny prototypu (niebiesko-szary) — tylko do porównania. |
+| `styles.css`, `parish-zielen.css` | Warstwa wizualna prototypu (wersja zielona): system projektowy + adaptacja parafialna. `parish.css` = wariant niebiesko-szary. |
+| `scripts/build-theme-css.sh` | Odtwarza `theme.css` motywu jako kopię 1:1 arkuszy prototypu. |
 | `assets/kosciol-dzien.jpg`, `assets/kosciol-zachod.jpg` | Fotografie kościoła dostarczone przez parafię (strona główna, „O parafii”). |
 | `wordpress-theme/parafia-andrychow/` | Motyw WordPress — kompletne źródła do wdrożenia. |
 | `docker-compose.yml`, `.env.example`, `docker/` | Gotowe środowisko uruchomieniowe (WordPress + MariaDB). |
 
-Prototyp i motyw korzystają z **tego samego CSS** (`wordpress-theme/parafia-andrychow/assets/css/theme.css` to złączenie `styles.css` + `parish.css`), więc to, co widać w prototypie, wygląda tak samo po wdrożeniu.
+Prototyp i motyw korzystają z **tego samego CSS**: `wordpress-theme/parafia-andrychow/assets/css/theme.css` to dokładna kopia `styles.css` + `parish-zielen.css` (generowana skryptem `scripts/build-theme-css.sh`), a szablony PHP generują ten sam markup (te same klasy i kolejność elementów) co prototyp. Dopasowania wyłącznie do WordPressa (treść z edytora blokowego, pasek administratora, stronicowanie) są w osobnym, małym pliku `assets/css/wp.css` i nie zmieniają kolorów, typografii ani układu.
+
+Zmiana wyglądu = zmiana w prototypie, potem `scripts/build-theme-css.sh`. Nie edytuj `theme.css` ręcznie.
 
 ### Treści demonstracyjne
 
@@ -104,10 +108,11 @@ O przynależności decyduje jedno pole wyboru w metaboksie księdza: „Kapłan 
 
 Menu **Parafia** w panelu (`inc/settings.php`, Settings API, jedna opcja tablicowa `parafia_ustawienia`):
 
+- tożsamość: nazwa, dalsza część wezwania, miejscowość, diecezja i dekanat,
 - porządek Mszy: niedziele, niedziele lipiec–sierpień, święta zniesione, dni powszednie, adwent, dni powszednie lipiec–sierpień,
 - kancelaria: godziny otwarcia, kiedy nieczynna,
 - kontakt: adres, telefon, e-mail, adres osadzenia mapy,
-- transmisja: publiczny adres osadzenia + zdanie opisowe,
+- transmisja: publiczny adres osadzenia + zdanie opisowe (tylko administrator), komunikat o niedostępności,
 - tryb demonstracyjny (pasek + noindex).
 
 ### Dlaczego bez ACF
@@ -124,7 +129,8 @@ wordpress-theme/parafia-andrychow/
 ├─ functions.php                tylko wczytanie modułów
 ├─ theme.json                   paleta, typografia, szerokości dla Gutenberga
 ├─ inc/
-│  ├─ setup.php                 supports, menu, rozmiary obrazów
+│  ├─ setup.php                 supports, menu, rozmiary obrazów, Customizer (fotografia)
+│  ├─ starter-content.php       brakujące strony + treści demonstracyjne przy aktywacji
 │  ├─ assets.php                CSS/JS, preload LCP
 │  ├─ post-types.php            CPT
 │  ├─ meta-fields.php           metaboxy (księża, intencje) + zapis z nonce
@@ -132,18 +138,20 @@ wordpress-theme/parafia-andrychow/
 │  ├─ schedule.php              wyliczenie dzisiejszych Mszy
 │  ├─ roles.php                 rola „Redaktor parafialny”
 │  ├─ security.php              noindex demo, utwardzenie
-│  └─ template-tags.php         helpery szablonów
+│  └─ template-tags.php         helpery szablonów, menu i ikony z prototypu
 ├─ template-parts/
 │  ├─ mass-table.php
 │  └─ card-aktualnosc.php
 ├─ header.php  footer.php  index.php  page.php  single.php  archive.php  404.php
 ├─ front-page.php               strona główna
+├─ page-msze.php  page-kontakt.php  page-transmisja.php
+├─ archive-aktualnosc.php  archive-intencja.php  archive-ksiadz.php  archive-galeria.php
 ├─ single-intencja.php          tydzień intencji
 ├─ template-transmisja.php      szablon „Transmisja na żywo”
-└─ assets/{css/theme.css, js/parafia.js}
+└─ assets/{css/theme.css (kopia prototypu), css/wp.css, js/parafia.js, img/}
 ```
 
-Jeden arkusz CSS, jeden skrypt (~40 linii: menu mobilne + zgoda na treści zewnętrzne). Zero page-buildera, zero frameworka JS.
+Arkusz prototypu + mały arkusz dopasowań WP, jeden skrypt (menu mobilne + zgoda na treści zewnętrzne). Zero page-buildera, zero frameworka JS.
 
 ---
 
@@ -208,7 +216,7 @@ phpMyAdmin świadomie pominięty — to kolejna publicznie dostępna powierzchni
 4. Wygląd → Motywy → **Parafia Andrychów** → Włącz. Aktywacja tworzy rolę „Redaktor parafialny”.
 5. **Wtyczki: żadna nie jest wymagana.** Motyw działa samodzielnie. Zalecane dopiero na produkcji — patrz sekcja 6.
 6. Ustawienia → Bezpośrednie odnośniki → **Nazwa wpisu**.
-7. Utwórz strony i menu — kroki 5–8 z sekcji 7a poniżej.
+7. Aktywacja sama tworzy brakujące strony (sekcja 7b) — menu działa od razu, bez konfiguracji.
 8. Parafia → Transmisja na żywo → wklej publiczny adres osadzenia.
 9. Sprawdź noindex — sekcja 14.
 
@@ -229,11 +237,17 @@ docker compose down -v               # zatrzymanie i USUNIĘCIE danych
 2. Skopiuj `wordpress-theme/parafia-andrychow/` do `wp-content/themes/`.
 3. Wygląd → Motywy → **Parafia Andrychów** → Włącz. Aktywacja tworzy rolę „Redaktor parafialny” i odświeża przekierowania.
 4. Ustawienia → Bezpośrednie odnośniki → **Nazwa wpisu**.
-5. Utwórz strony: `Transmisja na żywo` (szablon **Transmisja na żywo**), `Msze`, `Kontakt`, `Ofiara`, cztery strony sakramentów, `O parafii`, `Historia`, `Grupy parafialne`, `Polityka prywatności`.
-6. Ustawienia → Czytanie → strona główna: statyczna, wskaż utworzoną stronę startową (front-page.php i tak przejmie wyświetlanie).
-7. Wygląd → Menu → utwórz menu i przypisz do **Menu główne** oraz **Menu w stopce**.
-8. Wygląd → Dostosuj → dodaj fotografię nagłówkową (`parafia_hero_image`).
-9. Parafia → uzupełnij godziny Mszy, kancelarię, kontakt.
+5. Strony tworzą się same przy aktywacji (sekcja 7b). Strona główna nie wymaga ustawień — `front-page.php` wyświetla ją zawsze.
+6. (Opcjonalnie) Wygląd → Menu — własne menu dla lokalizacji **Menu główne**, **Menu mobilne**, **Stopka — kolumna „Parafia”**, **Stopka — kolumna „Informacje”**. Bez przypisanego menu motyw pokazuje dokładnie pozycje z prototypu.
+7. (Opcjonalnie) Wygląd → Dostosuj → **Fotografia na stronie głównej**. Bez wyboru używane jest zdjęcie kościoła z motywu.
+8. Parafia → sprawdź nazwę, godziny Mszy, kancelarię, kontakt.
+
+## 7b. Co motyw tworzy przy aktywacji
+
+Przy aktywacji (oraz jednorazowo po aktualizacji motywu, przy pierwszym wejściu administratora do panelu) `inc/starter-content.php` tworzy **wyłącznie brakujące** elementy — niczego nie nadpisuje:
+
+- strony z treścią z prototypu: `msze`, `transmisja` (szablon Transmisja), `kontakt`, `sakramenty` + `chrzest`, `malzenstwo`, `odwiedziny-chorych`, `pogrzeb`, `o-parafii` (ze zdjęciem kościoła o zachodzie), `historia`, `grupy-parafialne`, `ofiara`, `polityka-prywatnosci`,
+- w trybie demonstracyjnym, tylko gdy dany typ jest pusty: 2 ogłoszenia, bieżący tydzień intencji, księża (duszpasterze i kapłani pochodzący z parafii), 2 galerie z miejscami na zdjęcia — wszystko oznaczone jako treść demonstracyjna, do usunięcia przez parafię.
 
 ---
 
@@ -243,13 +257,19 @@ docker compose down -v               # zatrzymanie i USUNIĘCIE danych
 
 **Dodać intencje na tydzień:** Intencje mszalne → Dodaj tydzień intencji → tytuł np. „31 sierpnia – 6 września 2026” → w tabeli wpisz dzień, godzinę i treść → Zapisz. Po zapisie pojawia się kolejny pusty wiersz. Wiersz z pustą treścią jest usuwany. Stare tygodnie zostają na liście jako archiwum.
 
-**Zmienić godziny Mszy:** Parafia → Porządek Mszy Świętych → godziny po przecinku → Zapisz. Sekcja „Dzisiaj” na stronie głównej przelicza się sama.
+**Zmienić godziny Mszy:** Parafia → Porządek Mszy Świętych → godziny po przecinku → Zapisz. Godziny „Msze Święte dzisiaj” na stronie głównej i na stronie Msze przeliczają się same. Dopisek pod dzisiejszą datą (np. wspomnienie dnia) = pole **Zajawka** strony „Msze Święte”.
+
+**Zmienić treść podstrony (sakramenty, o parafii, historia, grupy, ofiara, prywatność):** Strony → edytuj. Tytuł, **Zajawka** = akapit wprowadzający pod tytułem, obrazek wyróżniający = fotografia w passe-partout, treść = nagłówki H2, akapity i listy. W panelu bocznym „Układ strony”: nadtytuł i ukrycie odnośnika do kancelarii.
+
+**Zmienić nazwę / diecezję / fotografię strony głównej:** Parafia → Tożsamość parafii; fotografia — Wygląd → Dostosuj → Fotografia na stronie głównej.
 
 **Zmienić dane księdza:** Księża → wybierz wpis → tytuł to imię i nazwisko, w metaboksie funkcja/telefon/e-mail, zdjęcie w „Obrazek wyróżniający”, kolejność w „Atrybuty strony → Kolejność”. Jeśli ksiądz nie posługuje w parafii, lecz z niej pochodzi — zaznacz „Kapłan pochodzący z naszej parafii” i podaj rok święceń; trafi wtedy na listę chronologiczną.
 
 **Dodać galerię:** Galerie → Dodaj galerię → tytuł i data → blok **Galeria** → wgraj zdjęcia → Opublikuj.
 
-**Zmienić godziny kancelarii / kontakt:** Parafia → sekcje „Kancelaria parafialna” i „Kontakt”.
+**Zmienić godziny kancelarii / kontakt:** Parafia → sekcje „Kancelaria parafialna” i „Kontakt” (zasilają stronę Kontakt, stopkę i nagłówek strony głównej). Godziny kancelarii wpisuj w formacie „Dni: godziny”, jedna pozycja w wierszu. Puste pole mapy = mapa wyszukana po adresie parafii.
+
+**Komunikat „transmisja niedostępna”:** Parafia → Transmisja na żywo → Komunikat (dostępny także dla redaktora).
 
 **Zmienić transmisję (tylko administrator):** Parafia → Transmisja na żywo → wklej **publiczny adres osadzenia** (YouTube / YouTube-nocookie / Vimeo). Puste pole = komunikat „Transmisja jest obecnie niedostępna.”. Nigdy nie wpisuj tu klucza transmisji ani hasła.
 
@@ -444,7 +464,7 @@ Zasady: codziennie, retencja min. 14 dni, kopia **poza serwerem** (S3/Dropbox/Dr
 
 ## 18. Znane ograniczenia demo
 
-- Prototyp HTML nie jest WordPressem — służy prezentacji wyglądu i przepływów; motyw w `wordpress-theme/` to osobny, wdrażalny artefakt, który nie był uruchamiany na żywej instalacji.
+- Prototyp HTML nie jest WordPressem — służy prezentacji wyglądu i przepływów. Motyw w `wordpress-theme/` został porównany z prototypem zrzutami ekranu (1440 px i 390 px) na instalacji WordPress 6.5 — różnice ograniczają się do treści przykładowych (daty, liczba wpisów) i podkreślenia bieżącej pozycji menu (styl `aria-current` z CSS prototypu).
 - Brak fotografii poza jedną dostarczoną — pozostałe miejsca to oznaczone placeholdery.
 - Dane księży, aktualności, intencje, historia i grupy są demonstracyjne.
 - E-mail parafii i numer rachunku nie zostały przekazane i nie są nigdzie wymyślone.

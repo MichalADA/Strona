@@ -17,6 +17,10 @@ const PARAFIA_OPTION = 'parafia_ustawienia';
  */
 function parafia_defaults() {
 	return array(
+		'nazwa'                  => 'Parafia św. Stanisława',
+		'wezwanie'               => 'Biskupa i Męczennika',
+		'miejscowosc'            => 'Andrychów',
+		'diecezja'               => 'Diecezja bielsko-żywiecka · dekanat andrychowski',
 		'msze_niedziela'         => '6:30, 8:30, 10:00, 11:30, 13:00, 18:00',
 		'msze_niedziela_lato'    => '6:30, 8:30, 10:00, 11:30, 20:00',
 		'msze_swieta_zniesione'  => '6:30, 8:30, 16:30, 18:00',
@@ -31,6 +35,7 @@ function parafia_defaults() {
 		'mapa_url'               => '',
 		'transmisja_embed'       => '',
 		'transmisja_opis'        => 'Transmisja Mszy Świętej z kościoła parafialnego.',
+		'transmisja_komunikat'   => 'Transmisja jest obecnie niedostępna. Najbliższa transmitowana Msza Święta — w niedzielę o 10:00.',
 		'tryb_demo'              => 1,
 	);
 }
@@ -83,23 +88,51 @@ add_action(
  * @return array
  */
 function parafia_sanitize_settings( $input ) {
-	$input = (array) $input;
-	$out   = parafia_defaults();
+	$input    = (array) $input;
+	$out      = parafia_defaults();
+	$previous = wp_parse_args( (array) get_option( PARAFIA_OPTION, array() ), parafia_defaults() );
 
-	foreach ( array( 'msze_niedziela', 'msze_niedziela_lato', 'msze_swieta_zniesione', 'msze_powszednie', 'msze_adwent', 'msze_powszednie_lato', 'telefon', 'transmisja_opis' ) as $k ) {
+	foreach ( array( 'nazwa', 'wezwanie', 'miejscowosc', 'diecezja', 'msze_niedziela', 'msze_niedziela_lato', 'msze_swieta_zniesione', 'msze_powszednie', 'msze_adwent', 'msze_powszednie_lato', 'telefon', 'transmisja_komunikat' ) as $k ) {
 		$out[ $k ] = sanitize_text_field( $input[ $k ] ?? $out[ $k ] );
 	}
 	foreach ( array( 'kancelaria_godziny', 'kancelaria_nieczynna', 'adres' ) as $k ) {
 		$out[ $k ] = sanitize_textarea_field( $input[ $k ] ?? $out[ $k ] );
 	}
 	$out['email']    = sanitize_email( $input['email'] ?? '' );
-	$out['mapa_url'] = esc_url_raw( $input['mapa_url'] ?? '' );
+	$out['mapa_url'] = parafia_sanitize_map( $input['mapa_url'] ?? '' );
+	$out['tryb_demo'] = empty( $input['tryb_demo'] ) ? 0 : 1;
 
-	// Transmisja: przyjmujemy wyłącznie publiczny URL osadzenia z listy dozwolonych hostów.
-	$out['transmisja_embed'] = parafia_sanitize_embed( $input['transmisja_embed'] ?? '' );
-	$out['tryb_demo']        = empty( $input['tryb_demo'] ) ? 0 : 1;
+	// Transmisja: tylko administrator (manage_parafia_stream). Redaktor nie widzi tych pól,
+	// więc zachowujemy poprzednie wartości zamiast je zerować.
+	if ( current_user_can( 'manage_parafia_stream' ) ) {
+		$out['transmisja_embed'] = parafia_sanitize_embed( $input['transmisja_embed'] ?? '' );
+		$out['transmisja_opis']  = sanitize_text_field( $input['transmisja_opis'] ?? '' );
+	} else {
+		$out['transmisja_embed'] = $previous['transmisja_embed'];
+		$out['transmisja_opis']  = $previous['transmisja_opis'];
+	}
 
 	return $out;
+}
+
+/**
+ * Mapa: tylko adresy osadzenia OpenStreetMap lub Google Maps (https).
+ *
+ * @param string $url Adres podany w ustawieniach.
+ * @return string
+ */
+function parafia_sanitize_map( $url ) {
+	$url = esc_url_raw( trim( (string) $url ) );
+	if ( '' === $url ) {
+		return '';
+	}
+	$host    = strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) );
+	$allowed = apply_filters( 'parafia_allowed_map_hosts', array( 'www.openstreetmap.org', 'openstreetmap.org', 'www.google.com', 'maps.google.com' ) );
+	if ( 'https' !== wp_parse_url( $url, PHP_URL_SCHEME ) || ! in_array( $host, $allowed, true ) ) {
+		add_settings_error( PARAFIA_OPTION, 'mapa', __( 'Adres mapy musi być adresem osadzenia OpenStreetMap lub Google Maps (https).', 'parafia' ) );
+		return '';
+	}
+	return $url;
 }
 
 /**
@@ -143,6 +176,25 @@ function parafia_settings_page() {
 		<form method="post" action="options.php">
 			<?php settings_fields( 'parafia' ); ?>
 
+			<h2><?php esc_html_e( 'Tożsamość parafii', 'parafia' ); ?></h2>
+			<p class="description"><?php esc_html_e( 'Nazwa w nagłówku, na stronie głównej i w stopce.', 'parafia' ); ?></p>
+			<table class="form-table" role="presentation">
+				<?php
+				$tozsamosc = array(
+					'nazwa'       => __( 'Nazwa (pierwszy wiersz)', 'parafia' ),
+					'wezwanie'    => __( 'Dalsza część wezwania', 'parafia' ),
+					'miejscowosc' => __( 'Miejscowość', 'parafia' ),
+					'diecezja'    => __( 'Diecezja i dekanat', 'parafia' ),
+				);
+				foreach ( $tozsamosc as $key => $label ) :
+					?>
+					<tr>
+						<th scope="row"><label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
+						<td><input class="regular-text" type="text" id="<?php echo esc_attr( $key ); ?>" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $o[ $key ] ); ?>"></td>
+					</tr>
+				<?php endforeach; ?>
+			</table>
+
 			<h2><?php esc_html_e( 'Porządek Mszy Świętych', 'parafia' ); ?></h2>
 			<p class="description"><?php esc_html_e( 'Godziny oddzielaj przecinkami, np. 6:30, 7:00, 18:00.', 'parafia' ); ?></p>
 			<table class="form-table" role="presentation">
@@ -169,11 +221,12 @@ function parafia_settings_page() {
 				<tr>
 					<th scope="row"><label for="kancelaria_godziny"><?php esc_html_e( 'Godziny otwarcia', 'parafia' ); ?></label></th>
 					<td><textarea id="kancelaria_godziny" rows="4" class="large-text" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[kancelaria_godziny]"><?php echo esc_textarea( $o['kancelaria_godziny'] ); ?></textarea>
-					<p class="description"><?php esc_html_e( 'Jedna pozycja w wierszu.', 'parafia' ); ?></p></td>
+					<p class="description"><?php esc_html_e( 'Jedna pozycja w wierszu, w formacie „Dni: godziny”, np. „Poniedziałek – sobota: 8:00 – 9:00”.', 'parafia' ); ?></p></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="kancelaria_nieczynna"><?php esc_html_e( 'Kancelaria nieczynna', 'parafia' ); ?></label></th>
-					<td><textarea id="kancelaria_nieczynna" rows="4" class="large-text" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[kancelaria_nieczynna]"><?php echo esc_textarea( $o['kancelaria_nieczynna'] ); ?></textarea></td>
+					<td><textarea id="kancelaria_nieczynna" rows="4" class="large-text" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[kancelaria_nieczynna]"><?php echo esc_textarea( $o['kancelaria_nieczynna'] ); ?></textarea>
+					<p class="description"><?php esc_html_e( 'Jedna okoliczność w wierszu — strona Kontakt złoży z nich zdanie „Kancelaria nieczynna …”.', 'parafia' ); ?></p></td>
 				</tr>
 			</table>
 
@@ -187,16 +240,21 @@ function parafia_settings_page() {
 					<td><input class="regular-text" type="email" id="email" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[email]" value="<?php echo esc_attr( $o['email'] ); ?>"></td></tr>
 				<tr><th scope="row"><label for="mapa_url"><?php esc_html_e( 'Adres mapy (osadzenie)', 'parafia' ); ?></label></th>
 					<td><input class="large-text" type="url" id="mapa_url" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[mapa_url]" value="<?php echo esc_attr( $o['mapa_url'] ); ?>">
-					<p class="description"><?php esc_html_e( 'Mapa ładuje się dopiero po kliknięciu użytkownika (RODO / cookies).', 'parafia' ); ?></p></td></tr>
+					<p class="description"><?php esc_html_e( 'Adres osadzenia OpenStreetMap (Udostępnij → HTML, sam adres z src) lub Google Maps. Puste pole = mapa wyszukana po adresie parafii. Mapa ładuje się dopiero po kliknięciu użytkownika (RODO / cookies).', 'parafia' ); ?></p></td></tr>
 			</table>
 
 			<h2><?php esc_html_e( 'Transmisja na żywo', 'parafia' ); ?></h2>
 			<table class="form-table" role="presentation">
-				<tr><th scope="row"><label for="transmisja_embed"><?php esc_html_e( 'Publiczny adres osadzenia', 'parafia' ); ?></label></th>
-					<td><input class="large-text" type="url" id="transmisja_embed" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[transmisja_embed]" value="<?php echo esc_attr( $o['transmisja_embed'] ); ?>" placeholder="https://www.youtube-nocookie.com/embed/...">
-					<p class="description"><?php esc_html_e( 'Wyłącznie publiczny adres osadzenia (YouTube / Vimeo). Nie wpisuj tu kluczy transmisji ani danych logowania. Puste pole = komunikat „Transmisja jest obecnie niedostępna”.', 'parafia' ); ?></p></td></tr>
-				<tr><th scope="row"><label for="transmisja_opis"><?php esc_html_e( 'Zdanie pod nagłówkiem', 'parafia' ); ?></label></th>
-					<td><input class="large-text" type="text" id="transmisja_opis" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[transmisja_opis]" value="<?php echo esc_attr( $o['transmisja_opis'] ); ?>"></td></tr>
+				<?php if ( current_user_can( 'manage_parafia_stream' ) ) : ?>
+					<tr><th scope="row"><label for="transmisja_embed"><?php esc_html_e( 'Publiczny adres osadzenia', 'parafia' ); ?></label></th>
+						<td><input class="large-text" type="url" id="transmisja_embed" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[transmisja_embed]" value="<?php echo esc_attr( $o['transmisja_embed'] ); ?>" placeholder="https://www.youtube-nocookie.com/embed/...">
+						<p class="description"><?php esc_html_e( 'Wyłącznie publiczny adres osadzenia (YouTube / Vimeo). Nie wpisuj tu kluczy transmisji ani danych logowania. Puste pole = komunikat o niedostępności (poniżej).', 'parafia' ); ?></p></td></tr>
+					<tr><th scope="row"><label for="transmisja_opis"><?php esc_html_e( 'Zdanie pod nagłówkiem', 'parafia' ); ?></label></th>
+						<td><input class="large-text" type="text" id="transmisja_opis" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[transmisja_opis]" value="<?php echo esc_attr( $o['transmisja_opis'] ); ?>"></td></tr>
+				<?php endif; ?>
+				<tr><th scope="row"><label for="transmisja_komunikat"><?php esc_html_e( 'Komunikat, gdy transmisja jest niedostępna', 'parafia' ); ?></label></th>
+					<td><input class="large-text" type="text" id="transmisja_komunikat" name="<?php echo esc_attr( PARAFIA_OPTION ); ?>[transmisja_komunikat]" value="<?php echo esc_attr( $o['transmisja_komunikat'] ); ?>">
+					<p class="description"><?php esc_html_e( 'Np. kiedy odbędzie się najbliższa transmitowana Msza Święta.', 'parafia' ); ?></p></td></tr>
 			</table>
 
 			<h2><?php esc_html_e( 'Tryb demonstracyjny', 'parafia' ); ?></h2>

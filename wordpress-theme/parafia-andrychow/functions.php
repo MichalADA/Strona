@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PARAFIA_VERSION', '1.0.0' );
+define( 'PARAFIA_VERSION', '1.1.0' );
 define( 'PARAFIA_DIR', get_template_directory() );
 define( 'PARAFIA_URI', get_template_directory_uri() );
 
@@ -22,4 +22,5 @@ require_once PARAFIA_DIR . '/inc/settings.php';     // ekran „Parafia”: msze
 require_once PARAFIA_DIR . '/inc/schedule.php';     // wyliczenie „dzisiejszych” godzin Mszy
 require_once PARAFIA_DIR . '/inc/roles.php';        // rola „Redaktor parafialny”
 require_once PARAFIA_DIR . '/inc/security.php';     // noindex demo, utwardzenie, nagłówki
-require_once PARAFIA_DIR . '/inc/template-tags.php';// helpery szablonów
+require_once PARAFIA_DIR . '/inc/template-tags.php';// helpery szablonów, menu z prototypu
+require_once PARAFIA_DIR . '/inc/starter-content.php'; // brakujące strony i treści startowe

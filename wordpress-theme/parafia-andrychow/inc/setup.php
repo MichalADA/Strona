@@ -26,15 +26,57 @@ add_action(
 
 		register_nav_menus(
 			array(
-				'primary' => __( 'Menu główne', 'parafia' ),
-				'footer'  => __( 'Menu w stopce', 'parafia' ),
+				'primary'     => __( 'Menu główne', 'parafia' ),
+				'mobile'      => __( 'Menu mobilne (opcjonalnie)', 'parafia' ),
+				'footer'      => __( 'Stopka — kolumna „Parafia”', 'parafia' ),
+				'footer_info' => __( 'Stopka — kolumna „Informacje”', 'parafia' ),
 			)
 		);
 
 		// Rozmiary dopasowane do realnych kontenerów szablonu — bez marnowania miejsca na dysku.
 		add_image_size( 'parafia-card', 720, 480, true );      // karty aktualności
 		add_image_size( 'parafia-portrait', 480, 600, true );  // portrety księży
-		add_image_size( 'parafia-hero', 2000, 900, true );     // fotografia nagłówkowa
+		add_image_size( 'parafia-hero', 1600, 1600, false );   // fotografia na stronie głównej (kadr 4:3 robi CSS)
+
+		// Zajawka strony = akapit wprowadzający (lead) pod tytułem.
+		add_post_type_support( 'page', 'excerpt' );
+	}
+);
+
+/**
+ * Wygląd → Dostosuj → Fotografia na stronie głównej.
+ * Bez wyboru używane jest zdjęcie kościoła dołączone do motywu.
+ */
+add_action(
+	'customize_register',
+	function ( $wp_customize ) {
+		$wp_customize->add_section(
+			'parafia_hero',
+			array(
+				'title'       => __( 'Fotografia na stronie głównej', 'parafia' ),
+				'description' => __( 'Zdjęcie kościoła obok nazwy parafii. Kadr 4:3 dopasowuje się automatycznie. Bez wyboru — zdjęcie dołączone do motywu.', 'parafia' ),
+				'priority'    => 30,
+			)
+		);
+		$wp_customize->add_setting(
+			'parafia_hero_image',
+			array(
+				'type'              => 'theme_mod',
+				'capability'        => 'edit_theme_options',
+				'sanitize_callback' => 'absint',
+			)
+		);
+		$wp_customize->add_control(
+			new WP_Customize_Media_Control(
+				$wp_customize,
+				'parafia_hero_image',
+				array(
+					'label'     => __( 'Fotografia', 'parafia' ),
+					'section'   => 'parafia_hero',
+					'mime_type' => 'image',
+				)
+			)
+		);
 	}
 );
 

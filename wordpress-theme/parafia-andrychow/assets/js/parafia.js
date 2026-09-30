@@ -1,4 +1,4 @@
-/* Jedyny skrypt front-endu. Bez zależności, ~40 linii.
+/* Jedyny skrypt front-endu. Bez zależności.
    1) menu mobilne, 2) zgoda na treści zewnętrzne (transmisja, mapa). */
 ( function () {
 	'use strict';
@@ -14,6 +14,7 @@
 	}
 
 	// Odtwarzacz/mapa ładowane dopiero po kliknięciu — bez zgody nie wysyłamy żądań do dostawcy.
+	// Ramka zastępuje całe pole zgody ([data-consent-box]), więc wypełnia odtwarzacz / miejsce mapy.
 	document.addEventListener( 'click', function ( e ) {
 		var btn = e.target.closest( '.stream-consent, .map-consent' );
 		if ( ! btn ) {
@@ -22,10 +23,13 @@
 		var frame = document.createElement( 'iframe' );
 		frame.src = btn.getAttribute( 'data-embed' );
 		frame.title = btn.getAttribute( 'data-title' ) || 'Transmisja na żywo';
-		frame.loading = 'lazy';
 		frame.allow = 'autoplay; fullscreen; picture-in-picture';
 		frame.allowFullscreen = true;
 		frame.referrerPolicy = 'strict-origin-when-cross-origin';
-		btn.parentNode.replaceChild( frame, btn );
+		if ( btn.classList.contains( 'map-consent' ) ) {
+			frame.className = 'map-frame';
+		}
+		var box = btn.closest( '[data-consent-box]' ) || btn;
+		box.parentNode.replaceChild( frame, box );
 	} );
 }() );
